@@ -5,8 +5,8 @@ Baseline: Stage 6 foundation, 2026 revision 2. This starter deliberately leaves 
 
 ## Group index
 
-- Group and tutorial: [complete]
-- Member names, GitHub usernames and UG/PG cohorts: [complete]
+- Group and tutorial: Group 6 Wednesday 2:30-4:30pm
+- Member names, GitHub usernames and UG/PG cohorts: Tamas Szucs = github username = u3318026 = Undergraduate, Ryan Grieves github username = BlackJack2180and Undergraduate, Md Tahmid Ul Islam Tonmoy github username = tahmidtonmoy and Postgraduate
 - Shared repository URL: [complete]
 - Latest completed stage: [complete]
 - Verified code SHA: [complete]

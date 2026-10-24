@@ -35,7 +35,12 @@ class PatientService:
         a blank/invalid ID. It must not create a replacement patient.
         The starter deliberately raises NotImplementedError.
         """
-        raise NotImplementedError('Stage 6: patient lookup')
+        if not isinstance(patient_id, str) or not patient_id.strip():
+            raise ValueError("Patient ID cannot be blank")
+        patient = self.data_store.find_patient(patient_id)
+        if patient is None:
+            raise LookupError("Patient doesnt exist")
+        return patient
 
 
 class PractitionerService:
@@ -71,8 +76,12 @@ class PractitionerService:
         practitioner. The starter deliberately raises
         NotImplementedError.
         """
-        raise NotImplementedError('Stage 6: practitioner lookup')
-
+        if not isinstance(practitioner_id, str) or not practitioner_id.strip():
+            raise ValueError("Practitioner ID cannot be blank")
+        practitioner = self.data_store.find_patient(practitioner_id)
+        if practitioner is None:
+            raise LookupError("Practitioner doesnt exist")
+        return practitioner
 
 class AppointmentService:
     """Coordinate booking, lookup and cancellation using the shared store."""
@@ -139,7 +148,15 @@ class AppointmentService:
         Return the cancelled object. Unknown IDs raise LookupError;
         invalid transitions raise ValueError and leave state unchanged.
         """
-        raise NotImplementedError('Stage 6: appointment cancellation')
+        if not isinstance(appointment_id, str) or not appointment_id.strip():
+            raise ValueError("Appointment ID Invalid")
+
+        if self.data_store.find_appointment(appointment_id) is None:
+            raise LookupError("Unknown appointment ID")
+
+        appointment = self.find_appointment(appointment_id)
+        appointment.cancel()
+        return appointment
 
     def list_practitioner_appointments(
         self,
