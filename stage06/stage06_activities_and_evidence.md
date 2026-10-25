@@ -11,44 +11,45 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
 
 ### FR-02 Patient Search
 
-- Title: [response]
-- Context: [response]
-- Requirement: [response]
-- Acceptance criteria: [response]
-- Scope: [response]
-- Definition of Done: [response]
-- Owner: [response]
-- Actual issue link: [response]
+- Title: A patient can be found through ID or name.
+- Context: A patient cannot be located without already having an existing record. This is stored by name and ID. A patient can be found by either searching for there specific name or ID.
+- Requirement: This system should let us search for a patient by other searching for their name or for their ID number.
+- Acceptance criteria: Searching for a ID should only bring up the exact patient. Patients with the same name should have different ID's. Should not be case sensitive. Searching a part of the name should still return the patient. 
+- Scope: In scope: Meet requirements, Passes all tests, read only (wont allow you to change data but allows you to read it), Out of scope: Matching mistyped names wioth potential patients, UI changes, Changing or editing patients details.
+- Definition of Done: Making sure that all requirements are met, and we are staying in scope.
+- Owner: Tamas Szucs
+- Actual issue link: [services.py] Line 38-43
+
 
 ### FR-06 Appointment Cancellation with FR-07 retained history
 
-- Title: [response]
-- Context: [response]
-- Requirement: [response]
-- Acceptance criteria: [response]
-- Scope: [response]
-- Definition of Done: [response]
-- Owner: [response]
-- Actual issue link: [response]
+- Title: Cancelling an appointment marks it as cancelled but is stil added to the patients history
+- Context: When an appointment is cancelled, it should still be added to the patients history because it is important information to know for the practitioner.
+- Requirement: FR-06: A appointment can be cancelled, FR-07: A cancelled appointment is still connected with patient history.
+- Acceptance criteria: Status of a booking should be changed when cancelled, Cancelled appointment is added to patient history, Once cancelled you cant cancel again, Cancelling one appointment shouldn't cancel another one of the patients appointments.
+- Scope: In scope: meet all requiremtns, Passes all tests, Looking through poatient history must show all cancellations. Out of scope: refunds and other money handling is done seperately, notifications of cancellation, rescheduling, Asking for cancellation reason.
+- Definition of Done: meets all requirements, stays within the scope of the task.
+- Owner: Tamas Szucs
+- Actual issue link: [services.py] Line 151-159
 
 ## B Commit quality
 
 | Original example | Strong or Weak | Reason |
 |---|---|---|
-| changes | [select] | [response] |
-| final version | [select] | [response] |
-| Add patient search by ID | [select] | [response] |
-| fix stuff | [select] | [response] |
-| Prevent cancellation of completed appointments | [select] | [response] |
+| changes | weak | way to vague, doesnt explain what was actually done |
+| final version | weak | too vague again, doesnt tell you what was done |
+| Add patient search by ID | Strong | describes what was done |
+| fix stuff | weak | vague again, doesnt tell you what was done |
+| Prevent cancellation of completed appointments | Strong | Clearly tells you what was done |
 
 ## C Over scoped PR review
 
 A cancellation PR also renames unrelated patient fields, restructures unrelated code and adds a new dependency.
 
-- Scope concerns: [response]
-- Responsibility and architecture concerns: [response]
-- Testing and review concerns: [response]
-- Changes to remove or separate, with reasons: [response]
+- Scope concerns: The pull request is not related to the task at hand, which would make it larger and harder to reveiw, Should focus only on cancellation.
+- Responsibility and architecture concerns: If unrelated things are added, then the code can stop working or affect other parts that were working before.
+- Testing and review concerns: Adding extra stuff can increase the chance of having bugs in our code which affects testing and verifying. 
+- Changes to remove or separate, with reasons: Remove all unrelated things tha were added, Make them seperate and small so it is easier to review and test.
 
 ## D Challenge a weak Copilot review
 
@@ -66,12 +67,12 @@ GitHub Copilot says: "Looks good; tests pass."
 
 | Practice | Team agreement |
 |---|---|
-| Branch naming | [response] |
-| Commit message convention | [response] |
-| PR size | [response] |
-| Another-member review requirement | [response] |
-| Merge rule | [response] |
-| Significant Copilot disclosure rule | [response] |
+| Branch naming | Use descriptive naming schemes |
+| Commit message convention | Make sure you are specific in exactly what you did |
+| PR size | Make PR's small and on one task/purpose at any time |
+| Another-member review requirement | Make sure atleast one other team member is reviewing your pull request before merging |
+| Merge rule | Merge only after approval |
+| Significant Copilot disclosure rule | Make sure to tell everyone when you are using genertaive AI for code or any other part |
 
 ## F Issue and backlog index
 
@@ -131,7 +132,16 @@ Record meaningful required use, not every trivial completion. Repeat per signifi
 
 Repeat per member. Include only categories that describe actual work; write not applicable where appropriate. Pairing or mentoring can be supported by a short corroborated note.
 
-- Member: [response]
+- Member: Tamas Szucs
+- Implementation: Stage 6-7
+- Testing: [work and evidence]
+- Review: [work and evidence]
+- Issue refinement: [work and evidence]
+- Design and responsibility discussion: [work and evidence]
+- Debugging or integration: [work and evidence]
+- Documentation or team support: [work and evidence]
+
+- Member: Ryan Greives
 - Implementation: [work and evidence]
 - Testing: [work and evidence]
 - Review: [work and evidence]
@@ -139,6 +149,17 @@ Repeat per member. Include only categories that describe actual work; write not 
 - Design and responsibility discussion: [work and evidence]
 - Debugging or integration: [work and evidence]
 - Documentation or team support: [work and evidence]
+
+
+- Member: Md Tahmid Ul Islam Tonmoy
+- Implementation: [work and evidence]
+- Testing: [work and evidence]
+- Review: [work and evidence]
+- Issue refinement: [work and evidence]
+- Design and responsibility discussion: [work and evidence]
+- Debugging or integration: [work and evidence]
+- Documentation or team support: [work and evidence]
+
 
 ## K Exit question
 
