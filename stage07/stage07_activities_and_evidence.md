@@ -14,34 +14,34 @@ For each requirement, propose one positive test, one negative test and the key a
 
 | Requirement | Positive test | Negative test | Key assertion |
 |---|---|---|---|
-| FR-01 Register patient | [response] | [response] | [response] |
-| FR-05 Prevent practitioner conflict | [response] | [response] | [response] |
-| FR-06 Cancel appointment | [response] | [response] | [response] |
-| FR-07 Retain cancelled history | [response] | [response] | [response] |
+| FR-01 Register patient | test_register_patient checks if the patient is registered and stored | test_duplicate_patients checks for patients with duplicate ids | the patient ID and name match the stored data. |
+| FR-05 Prevent practitioner conflict | test_book_appointment, checks successful booking | test_same_practitioner_at_the_same_time_isnt_allowed, checks for bookings with the same doctor at the same time | bookings at the same time will cause a valueerror for the second booking and keep the first one |
+| FR-06 Cancel appointment | test_cancel_appointment checks cancellations | test_cancelled_appointment_cant_be_cancelled_again checks for repeated cancellations | first cancellation cancels it, causes value error on second attempt |
+| FR-07 Retain cancelled history | test_cancelled_appointment_is_stored checks the cancelled appointment is stored | test_find_cancelled_appointment checks for cancelled appointments and makes sure you can still find them | appointment remains stored and findable if it is cancelled |
 
 ### Activity 2 Strong or weak assertion
 
 For each, select Strong for stated behaviour or Weak/unclear and explain why. State the behaviour and limits.
 
 `assert True`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: Weak/unclear  Why: it always passes the assertion
 
 `assert appointment is not None`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: Weak/unclear  Why: only tells us that an objct is there, doesnt tell us if the info is correct.
 
 `assert appointment.status == AppointmentStatus.CANCELLED`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: Strong for stated behaviour  Why: checks for the specific status that is required
 
 `assert len(results) > 0`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: Weak/unclear  Why: proves atleast one result is there but not that the result is correct
 
 `assert data_store.find_appointment('A1') is appointment`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: Strong for stated behaviour Why: checks that the data store is returning the same object
 
 ### Activity 3 Boundary thinking
 
 Design boundary or edge cases for blank identifiers, whitespace-only names, same-time practitioner bookings, cancelled appointments and invalid status transitions.
-For each input/state, expected result and supporting contract: [response]
+For each input/state, expected result and supporting contract: most would raise a value error and the rest would just reject it entirely. This is based off the testing and excepetions created in the starter code.
 
 ### Activity 4 Critique GitHub Copilot tests
 
@@ -49,16 +49,16 @@ GitHub Copilot generates five tests, all of which pass. Two only assert that obj
 
 | Candidate | What is wrong | Rewritten test intention |
 |---|---|---|
-| 1 | [response] | [response] |
-| 2 | [response] | [response] |
-| 3 | [response] | [response] |
-| 4 | [response] | [response] |
-| 5 | [response] | [response] |
+| 1 | Assert appointment is not none | Book an appointment and check all of its variables |
+| 2 | Assert appointment is not none | Find an appointment ID and check whether the corresponding patient and practitioner details are correct |
+| 3 | Assert true | cancel the shedued appointment  and assert its status to cancelled |
+| 4 | Assume sms notification exists | test the cancellation and retained history without thinking notification will work |
+| 5 | Assume sms notification exists | verify that a repeated cancellation is rejected and the appointment remains cancelled |
 
 ### Tutorial exit question
 
 Why can 100% code coverage coexist with poor software verification?
-[response]
+It can coexist because it is checking the code exectued and not the tests checked the correct behaviour. Could complete the entire executable but with weak assertions nothing will happen.
 
 ## B Requirement to Test Traceability Matrix
 

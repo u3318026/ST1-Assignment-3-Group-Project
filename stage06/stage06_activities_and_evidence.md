@@ -55,13 +55,13 @@ A cancellation PR also renames unrelated patient fields, restructures unrelated 
 
 GitHub Copilot says: "Looks good; tests pass."
 
-- Missing evidence: [response]
-- Follow-up review question 1: [response]
-- Follow-up review question 2: [response]
-- Follow-up review question 3: [response]
-- Follow-up review question 4: [response]
-- Follow-up review question 5: [response]
-- Additional questions if useful: [response]
+- Missing evidence: missing what tests were run, or which file/direcotry, or commit or assert.
+- Follow-up review question 1: What exact command did you run?
+- Follow-up review question 2: What acceptance criteria was used?
+- Follow-up review question 3: After the test does the object stay the same or is it changed by an operator like cancel()?
+- Follow-up review question 4: What happened on each failure path?
+- Follow-up review question 5: Is anything changed outside of the linked issue?
+- Additional questions if useful: n/a
 
 ## E Team workflow agreement
 
@@ -80,12 +80,14 @@ Create at least two focused issues. Add a linked practitioner-lookup issue or an
 
 | Issue link | Requirement | Owner | Acceptance criteria or precise link | Status |
 |---|---|---|---|---|
-| [issue 1] | [response] | [response] | [response] | [response] |
-| [issue 2] | [response] | [response] | [response] | [response] |
+| [issue 1] | FR-02patient search | Tamas Szucs | FR-02 acceptance criteria, line 31-43 in services.py and tested in test_service | active |
+| [issue 2] | FR-06 Appointment cancellation while reataining history | Tamas Szucs | FR-06/07 line 144-159 in serices.py and tested inside the test_services.py | Active |
 
 ## G Pull request evidence
 
 Repeat this block per PR. Record actual events, not planned approvals.
+
+we are all working on the main so we dont need to be making constant pull requests.
 
 - PR link and title: [response]
 - Linked issue and requirement: [response]
@@ -134,11 +136,11 @@ Repeat per member. Include only categories that describe actual work; write not 
 
 - Member: Tamas Szucs
 - Implementation: Stage 6-7
-- Testing: [work and evidence]
+- Testing: All tests passed.png
 - Review: [work and evidence]
 - Issue refinement: [work and evidence]
-- Design and responsibility discussion: [work and evidence]
-- Debugging or integration: [work and evidence]
+- Design and responsibility discussion: Was lead design for implementing parts 6-7
+- Debugging or integration: Was leading part 6-7, had many debuggings during the process of testing, fixed all of those to make sure that its working.
 - Documentation or team support: [work and evidence]
 
 - Member: Ryan Greives

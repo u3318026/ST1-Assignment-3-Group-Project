@@ -148,6 +148,12 @@ def test_cancelled_appointment_is_stored():
     appointment_service.cancel_appointment("a1")
     assert data_store.find_appointment("a1").status == AppointmentStatus.CANCELLED
 
+def test_find_cancelled_appointment():
+    data_store, _, _, appointment_service, appointment = setup_with_appointment()
+    appointment_service.cancel_appointment("a1")
+    found_appointment = appointment_service.find_appointment("a1")
+    assert found_appointment.status == AppointmentStatus.CANCELLED
+
 #tests to make sure that the cancelled appointment cannot be cancelled again and raises a ValueError
 def test_cancelled_appointment_cant_be_cancelled_again():
     data_store, _, _, appointment_service, appointment = setup_with_appointment()
