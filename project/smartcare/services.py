@@ -78,7 +78,7 @@ class PractitionerService:
         """
         if not isinstance(practitioner_id, str) or not practitioner_id.strip():
             raise ValueError("Practitioner ID cannot be blank")
-        practitioner = self.data_store.find_patient(practitioner_id)
+        practitioner = self.data_store.find_practitioner(practitioner_id)
         if practitioner is None:
             raise LookupError("Practitioner doesnt exist")
         return practitioner

@@ -1,6 +1,6 @@
 # Stage 7 Testing and Verification Record
 
-Group/tutorial: [complete]  Members/cohorts: [complete]
+Group/tutorial: Group 6 wednesday 2:30-4:30pm  Members/cohorts: Tamas Szucs, Ryan Grieves, Md Tahmid Ul Islam Tonmoy
 Requirements baseline: SmartCare A3 Requirements Baseline 2026, revision 2.
 Use the same project/. Link actual evidence; keep responses concise. Blank fields are for your group. Copy rows only as needed.
 
