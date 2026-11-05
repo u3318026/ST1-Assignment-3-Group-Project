@@ -88,7 +88,8 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 - Symptom / observed behaviour: Two bookings for the same practitioner at the same time are both accepted or booking a different practitioner at that same time is wrongly rejected.
 - Expected behaviour and requirement: A second booking for the same practitioner at the same datetime is rejected with ValueError and the stored records stay unchanged (FR-05 / AC-04.1). But a different practitioner at the same time is allowed (AC-04.2).
 - Minimal synthetic reproduction steps: In a fresh store register patients P1 and P2 and practitioners D1 and D2. Book A1 (P1, D1, 2026-10-01 09:00). Book A2 (P2, D1, 2026-10-01 09:00). Next in another fresh store with A1 booked, book A3 (P2, D2, 2026-10-01 09:00).
-- Meaningful failing test path/name and exact relevant failure: project/tests/test_regressions.py and the output is ============================= test session starts =============================
+- Meaningful failing test path/name and exact relevant failure: project/tests/test_regressions.py and the output is 
+============================= test session starts =============================
 collecting ... collected 4 items
 
 tests/test_regressions.py::test_f8_01_same_practitioner_same_time_is_rejected FAILED [ 25%]
@@ -224,14 +225,144 @@ smartcare\services.py:155: LookupError
 - Human hypothesis and intended checks: see E, F8-01.
 - Supported root cause and inspected code/runtime evidence: In SmartCareDataStore.has_practitioner_conflict the practitioner ID check uses `!=` instead of `==` so only a different practitioner's appointment counts as a conflict. Evidence: After booking A1 with D1 at the test time has_practitioner_conflict('D1', time) returned False and has_practitioner_conflict('D2', time) returned True. 
 - Smallest justified fix / diff / why other behaviour is preserved: Changed 'practitioner_id !=` to `practitioner_id ==` in data_store.py has_practitioner_conflict. The excluded-ID, date/time and SCHEDULED-status conditions are unchanged so cancelled and completed appointments still allow a slot and no other method or file was changed.
-- Repair SHA / focused verification result:  
+- Repair SHA / focused verification result: repair SHA = a8368ea  test_f8_01_same_practitioner_same_time_is_rejected and test_f8_01_different_practitioner_same_time_is_allowed now pass. 
+Full suite =
+_________________________________________________________________________________________ test_f8_02_cancelled_appointment_is_still_found _________________________________________________________________________________________
+
+services = (<smartcare.data_store.SmartCareDataStore object at 0x000001DACD75F110>, <smartcare.services.AppointmentService object at 0x000001DACD908190>)
+
+    def test_f8_02_cancelled_appointment_is_still_found(services):
+        store, appointments = services
+        booked = appointments.book_appointment('A1', 'P1', 'D1', WHEN)
+        cancelled = appointments.cancel_appointment('A1')
+        assert cancelled is booked
+        assert cancelled.status is AppointmentStatus.CANCELLED
+>       assert store.find_appointment('A1') is booked
+E       AssertionError: assert None is <smartcare.domain.Appointment object at 0x000001DACD7BDE50>
+E        +  where None = find_appointment('A1')
+E        +    where find_appointment = <smartcare.data_store.SmartCareDataStore object at 0x000001DACD75F110>.find_appointment
+
+tests\test_regressions.py:49: AssertionError
+___________________________________________________________________________________ test_f8_02_repeated_cancellation_is_rejected_without_change ___________________________________________________________________________________
+
+services = (<smartcare.data_store.SmartCareDataStore object at 0x000001DACD7EA2C0>, <smartcare.services.AppointmentService object at 0x000001DACD7EA650>)
+
+    def test_f8_02_repeated_cancellation_is_rejected_without_change(services):
+        store, appointments = services
+        booked = appointments.book_appointment('A1', 'P1', 'D1', WHEN)
+        appointments.cancel_appointment('A1')
+        with pytest.raises(ValueError):
+>           appointments.cancel_appointment('A1')
+
+tests\test_regressions.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <smartcare.services.AppointmentService object at 0x000001DACD7EA650>, appointment_id = 'A1'
+
+    def cancel_appointment(self, appointment_id: str) -> Appointment:
+        """Stage 6: cancel through the domain method and retain the
+        appointment.
+    
+        Return the cancelled object. Unknown IDs raise LookupError;
+        invalid transitions raise ValueError and leave state unchanged.
+        """
+        if not isinstance(appointment_id, str) or not appointment_id.strip():
+            raise ValueError("Appointment ID Invalid")
+    
+        if self.data_store.find_appointment(appointment_id) is None:
+>           raise LookupError("Unknown appointment ID")
+E           LookupError: Unknown appointment ID
+
+smartcare\services.py:155: LookupError
+_____________________________________________________________________________________________________ test_cancel_appointment _____________________________________________________________________________________________________
+
+    def test_cancel_appointment():
+        data_store, _, _, appointment_service, appointment = setup_with_appointment()
+        canceled_appointment = appointment_service.cancel_appointment("a1")
+        assert canceled_appointment.status == AppointmentStatus.CANCELLED
+>       assert data_store.find_appointment("a1").status == AppointmentStatus.CANCELLED
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'status'
+
+tests\test_services.py:143: AttributeError
+______________________________________________________________________________________________ test_cancelled_appointment_is_stored _______________________________________________________________________________________________
+
+    def test_cancelled_appointment_is_stored():
+        data_store, _, _, appointment_service, appointment = setup_with_appointment()
+        appointment_service.cancel_appointment("a1")
+>       assert data_store.find_appointment("a1").status == AppointmentStatus.CANCELLED
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'status'
+
+tests\test_services.py:149: AttributeError
+_________________________________________________________________________________________________ test_find_cancelled_appointment _________________________________________________________________________________________________
+
+    def test_find_cancelled_appointment():
+        data_store, _, _, appointment_service, appointment = setup_with_appointment()
+        appointment_service.cancel_appointment("a1")
+>       found_appointment = appointment_service.find_appointment("a1")
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_services.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <smartcare.services.AppointmentService object at 0x000001DACD91D130>, appointment_id = 'a1'
+
+    def find_appointment(self, appointment_id: str) -> Appointment:
+        """Return the stored appointment; raise LookupError when absent.
+    
+        Reject a blank or invalid ID with ValueError; do not create
+        records.
+        """
+        appointment = self.data_store.find_appointment(appointment_id)
+        if appointment is None:
+>           raise LookupError('Appointment not found')
+E           LookupError: Appointment not found
+
+smartcare\services.py:141: LookupError
+_______________________________________________________________________________________ test_cancelled_appointment_cant_be_cancelled_again ________________________________________________________________________________________
+
+    def test_cancelled_appointment_cant_be_cancelled_again():
+        data_store, _, _, appointment_service, appointment = setup_with_appointment()
+        appointment_service.cancel_appointment("a1")
+        with pytest.raises(ValueError):
+>           appointment_service.cancel_appointment("a1")
+
+tests\test_services.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <smartcare.services.AppointmentService object at 0x000001DACD9277D0>, appointment_id = 'a1'
+
+    def cancel_appointment(self, appointment_id: str) -> Appointment:
+        """Stage 6: cancel through the domain method and retain the
+        appointment.
+    
+        Return the cancelled object. Unknown IDs raise LookupError;
+        invalid transitions raise ValueError and leave state unchanged.
+        """
+        if not isinstance(appointment_id, str) or not appointment_id.strip():
+            raise ValueError("Appointment ID Invalid")
+    
+        if self.data_store.find_appointment(appointment_id) is None:
+>           raise LookupError("Unknown appointment ID")
+E           LookupError: Unknown appointment ID
+
+smartcare\services.py:155: LookupError
+===================================================================================================== short test summary info =====================================================================================================
+FAILED tests/test_regressions.py::test_f8_02_cancelled_appointment_is_still_found - AssertionError: assert None is <smartcare.domain.Appointment object at 0x000001DACD7BDE50>
+FAILED tests/test_regressions.py::test_f8_02_repeated_cancellation_is_rejected_without_change - LookupError: Unknown appointment ID
+FAILED tests/test_services.py::test_cancel_appointment - AttributeError: 'NoneType' object has no attribute 'status'
+FAILED tests/test_services.py::test_cancelled_appointment_is_stored - AttributeError: 'NoneType' object has no attribute 'status'
+FAILED tests/test_services.py::test_find_cancelled_appointment - LookupError: Appointment not found
+FAILED tests/test_services.py::test_cancelled_appointment_cant_be_cancelled_again - LookupError: Unknown appointment ID
+6 failed, 44 passed in 0.11s
 
 ## D. F8-02 diagnosis and repair
 
-- Symptom / observed behaviour: [complete]
-- Expected behaviour and requirement: [complete]
-- Minimal synthetic reproduction steps: [complete]
-- Meaningful failing test path/name and exact relevant failure: [complete]
+- Symptom / observed behaviour: After an appointment is booked and then cancelled, looking it up returns nothing. data_store.find_appointment('A1') returns None, appointment_service.find_appointment('A1') raises LookupError: Appointment not found, and a second cancel_appointment('A1') raises LookupError: Unknown appointment ID instead of ValueError. The cancel itself succeeds and returns the object with status CANCELLED.
+- Expected behaviour and requirement: A cancelled appointment stays stored with status CANCELLED and is still found by store and service lookup, returns the same object and still appears in list_appointments() (FR-06/07, BR-07, FR-08, AC-05.2). Cancelling it again is rejected with ValueError and leaves the state unchanged.
+- Minimal synthetic reproduction steps: In a fresh store register patient P1 and practitioner D1. Book A1 (P1, D1, 2026-10-01 09:00). Call cancel_appointment('A1'). Then call data_store.find_appointment('A1').
+- Meaningful failing test path/name and exact relevant failure: project/tests/test_regressions.py::test_f8_02_cancelled_appointment_is_still_found (AssertionError: assert None is <Appointment object>) and ::test_f8_02_repeated_cancellation_is_rejected_without_change (LookupError: Unknown appointment ID, services.py line 155). Existing tests showing the same defect: tests/test_services.py::test_cancel_appointment, ::test_cancelled_appointment_is_stored, ::test_find_cancelled_appointment, ::test_cancelled_appointment_cant_be_cancelled_again.
 - Human hypothesis and intended checks: see E, F8-02.
 - Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
 - Smallest justified fix / diff / why other behaviour is preserved: [complete]
@@ -242,8 +373,8 @@ smartcare\services.py:155: LookupError
 Complete both entries BEFORE Copilot. C/D supply observed/expected/reproduction/test; retain those initial facts and link them here.
 
 ### F8-01 human entry
-Likely cause and why plausible: [complete]
-Evidence intended to inspect / competing explanation / discriminating check: [complete]
+Likely cause and why plausible: The practitioner ID comparison in SmartCareDataStore.has_practitioner_conflict is the wrong way around as it treats a different practitioner as a conflict. It is likely this because it fits the symptoms.
+Evidence intended to inspect / competing explanation / discriminating check: Read the practitioner condition in has_practitioner_conflict and compare it with FR-05 / AC-04.1 and AC-04.2. Run has_practitioner_conflict('D1', time) and ('D2', time) after booking with D1; a correct method gives True for D1 and False for D2. Competing explanation: A removal path deletes the appointment. A search of project/smartcare for del, pop and remove as well as the fact that A1 is still in the list would rule that out.
 Member and saved sequence/time or commit showing this preceded consultation: [complete]
 
 ### F8-02 human entry
