@@ -4,79 +4,227 @@ UG and PG | One evolving group project | Complete this blank record using the St
 
 All Assignment 3 stage materials are provided from the beginning. Complete this stage only after the previous applicable stage has been integrated, verified and recorded. Use this supplied record in stage08/ in your EXISTING repository. Preserve project/, all earlier tests, records and responses. Do not download another starter or copy staff solutions. The Stage 8 preparation utility is supplied or run by teaching staff when Stage 8 begins. Follow your tutor’s controlled workflow and the handout. If temporarily supplied, keep it outside the repository in a sibling Stage_8_Assets/ folder; exclude it from Git and the final submission.
 
-Group/tutorial: [complete]
-Members and UG/PG cohorts: [complete]
+Group/tutorial: Wed 2:30 - 4:30 group 6
+Members and UG/PG cohorts: Ryan grieves(UG), Tamas Szucs(UG) and Md Tahmid UI Islam Tonmoy(PG)
 Record owner / contribution links for each member: [complete]
 
-Use concise results and accessible artefact links rather than copying entire logs. Keep human-first entries before consulting GitHub Copilot. Link shared evidence once; do not repeat it across sections. No entries below are specimen answers or claimed results.
+Use concise results and accessible artifact links rather than copying entire logs. Keep human-first entries before consulting GitHub Copilot. Link shared evidence once; do not repeat it across sections. No entries below are specimen answers or claimed results.
 
 ## A. Tutorial activities
 
 ### A.1 Classify all five statements
 For each, choose symptom, evidence or hypothesis/opinion, and explain your reason. These are discussion statements, not confirmed diagnoses.
-- Appointment disappears after cancellation.
-- The data-store removal path is probably being called.
-- The failing test shows store.find_appointment('A1') returns None.
-- The service layer is badly designed.
-- Traceback points to smartcare/services.py line 42 in the example.
+1. Appointment disappears after cancellation.
+2. The data-store removal path is probably being called.
+3. The failing test shows store.find_appointment('A1') returns None.
+4. The service layer is badly designed.
+5. Traceback points to smartcare/services.py line 42 in the example.
 The example line number is illustrative; inspect the actual line in your run. The removal hypothesis must be tested against the current project, which has no public delete operation.
 
-Response and reason: [complete]
+Response and reason: 
+1. Symptom because it describes what the user sees and says nothing about the cause.
+2. Hypothesis because it proposes an unconfirmed cause  that is testable.
+3. Evidence because it is a hard value that can be repeated by redoing the test.
+4. Opinion because "Badly designed" has no testable or measurable benchmark.
+5. Evidence because it is from a checkable fact that the output of the code is a traceback to line 42.
 
 ### A.2 Build a debugging record
 Choose the cancelled-history scenario or a same-practitioner/time booking. Before changing code, record expected behaviour, observed behaviour, minimal reproduction, a hypothesis and evidence to inspect. Use a requirement to justify the expectation. Keep the initial hypothesis even if later evidence disproves it.
 
-Response and reason: [complete]
+Response and reason: The expected behaviour is that after it is cancelled it says stored and can be looked up with the status cancelled. This outcome is from the requirment FR-07(a cancelled appointment is retained in history). The observed behavour is: After cancel_appointment("a1") succeeds, data_store.find_appointment("a1") returns None. appointment_service.find_appointment("a1") then raises LookupError: Appointment not found. A second cancel_appointment("a1") raises LookupError instead of the expected ValueError. To reproduce the test register patient p1 and practitioner pr1. Next book appointment a1 for them at any datetime. Then call cancel_appointment("a1"). Then call find_appointment("a1"). My hypothosis is that find_appointment skips appointments that are cancelled. This would also explain the second failure id cancel_appointment calls find_appointment which leads to a LookupError.
 
 ### A.3 Test defect or product defect
 A test expects cancelled appointments to be deleted, but FR-07 says history must be retained. What should be changed? Explain why. Also decide whether a test expecting different practitioners at the same time to conflict reflects AC-04.2. Do not assume every failing test is correct.
 
-Response and reason: [complete]
+Response and reason: The requirements are always correct and so the tests should be changed because they conflict with the requirements.
 
 ### A.4 Refactoring smell hunt
 Consider a hypothetical 70-line AppointmentService method containing duplicate status strings, direct collection manipulation, printing, validation and four nested conditionals. Identify the smells and propose small refactorings that preserve required behaviour. The direct collection work replaces the old storage-specific scenario; use the existing SmartCareDataStore boundary. Do not implement an extra architecture.
 Classify these proposed changes as refactoring, repair or feature: rename appt to appointment; extract a repeated conflict helper; add rescheduling; restore retained cancellation lookup; replace a magic status string with the existing enum. Explain the behaviour that must remain unchanged.
 
-Response and reason: [complete]
+Response and reason:Smells in the hypothetical method: Duplicate status strings: to refactor replace with AppointmentStatus enum, Direct collection manipulation: to refactor use add_ and find_ and list_ instead of dictionarys, Printing inside a service: to refactor return the result and let the console print it, Validation is tangled with the logic: to refactor use rely on domain and store’s existing validation, there is 4 nested conditionals: to refactor use guard clauses.     Classifying the proposed changes: rename appt to appointment = Refactoring, extract a repeated conflict helper = Refactoring, add rescheduling = Feature, restore retained cancellation lookup = Repair, replace a magic status string with the existing enum = Refactoring. Behaviours that must stay the same are: Return values because the same appointment object must come back and not a copy, Exceptions because LookupError is required for unknown records and ValueError for invalid inputs, duplicates, conflicts and illegal cancellations, State after failure because a rejected request must leave the stored records unchanged, History because cancelled appointments stay stored and findable and listable, Conflict rule because only the same practitioner booked at the same time should conflict.
 
 ### A.5 Traceback and hypothesis ranking
 Using one actual failure, identify its exception/assertion, expected and observed values, test line, application call path and supporting requirement. List three plausible causes and rank them by fit with the available evidence. For each cause, name a check that could distinguish it from the others. Explain why a traceback alone does not establish the cause.
 
-Response and reason: [complete]
+Response and reason: 
+Failure: test_cancelled_appointment_cant_be_cancelled_again
+Exception: LookupError unknown appointment id
+Expected: ValueError
+Observed: LookupError was raised
+Call path: The test calls AppointmentService.cancel_appointment. That method then calls data_store.find_appointment("a1"). It returned none and so a LookupError was raised.
+Requirement: FR-06 (a cancelled appointment can't be cancelled again) and FR-07 (cancelled appointments are kept in history).
+Possible cause 1: data_store.find_appointment returns None for cancelled appointments. To check call data_store.find_appointment("a1") after the first cancel. If it returns None this is the cause.
+Possible cause 2: The cancelled appointment was removed from the store. To check look at list_appointments() after the cancel. If "a1" is still there this is ruled out.
+Possible cause 3: A mistake in the test setup or ID like different spelling. To check compare the ID strings used in the setup and the calls.
+
+The traceback isn't enough because it only shows where the error was raised not why.
 
 ### A.6 Exit question
 Why is changing code immediately after seeing a failure often a poor debugging strategy?
 
-Response and reason: [complete]
+Response and reason: You haven't checked to make sure you have found the right bug in the code if you haven't done tests to check.
 
 
-Classification responses (1–5, each with reason): [complete]
-Tutorial debugging record — expected; observed; reproduction; hypothesis; evidence to inspect: [complete]
-Traceback — exception/assertion; expected/observed values; test line; call path; requirement; ranked causes and discriminating checks: [complete]
+Classification responses (1–5, each with reason): See A.1
+Tutorial debugging record — expected; observed; reproduction; hypothesis; evidence to inspect: See A.2
+Traceback — exception/assertion; expected/observed values; test line; call path; requirement; ranked causes and discriminating checks: See A.5
 
 ## B. Stage 7 baseline and safe preparation
 
-- Stage 7 code SHA and requirement baseline: [complete]
-- Baseline test command / working directory / observed result / evidence: [complete]
-- Clean preparation SHA if a record-only commit followed Stage 7: [complete]
-- Branch and preparer / how teammates obtained this branch: [complete]
-- Downloaded tool version, source SHA256 and --check outcome: [complete]
-- --apply and --verify output summaries / artefact references: [complete]
-- Bounded diff inspected and recovery location (not committed): [complete]
-- Prepared faulty-state commit SHA: [complete]
-- Preparation or recovery issues and resolution, if any: [complete]
-- Initial prepared full-suite command / result / key failures: [complete]
+- Stage 7 code SHA and requirement baseline: Baseline git SHA = e04a24518c75a19cd7322274e4b3fdeccbb83506, requirements = Smartcare A3 Requirments Baseline 2026, revision 2.
+- Baseline test command / working directory / observed result / evidence: "python -m pytest -q" there were 45 tests passed before preparation. Version of pycharm is (Python 3.14.3, pytest 9.1.1). Evidence: ![img.png](img.png)
+- Clean preparation SHA if a record-only commit followed Stage 7: Baseline git SHA = e04a24518c75a19cd7322274e4b3fdeccbb83506
+- Branch and preparer / how teammates obtained this branch: Prepared by Tamas Szucs (u3318026)
+- Downloaded tool version, source SHA256 and --check outcome: stage 8 tool 1.1; preflight PASS; baseline SHA256 b4a1993e878c59a9df5e9055320702b2d318c5b6055bb1693a3afc25cd8fd375
+- --apply and --verify output summaries / artifact references: PREPARED F8-01 practitioner conflict and F8-02 retained-history lookup; expected failures test_f8_01_conflict and test_f8_02_history (2 failed); backup and hash recorded in .stage8_faults. --verify: exactly 2 expected failures, both approved symptom signatures present. Evidence: ![img_1.png](img_1.png)
+- Bounded diff inspected and recovery location (not committed): git diff showed changes to project/smartcare/data_store.py (find_appointment and has_practitioner_conflict) and .gitignore (ignores .stage8_faults/, .stage8-check-*/, .stage8-verify-*/). Recovery backup is in project/.stage8_faults/, which is git-ignored and not committed.
+- Prepared faulty-state commit SHA: 7f9ffa0 ("Stage 08 debug setup", u3318026, 28 Oct 2026).
+- Preparation or recovery issues and resolution, if any: none
+- Initial prepared full-suite command / result / key failures: `python -m pytest -q` from project/ on debug/stage8: 7 failed, 39 passed. Four failures are cancelled-appointment lookups (find_appointment returns None / LookupError after cancelling): test_cancel_appointment, test_cancelled_appointment_is_stored, test_find_cancelled_appointment, test_cancelled_appointment_cant_be_cancelled_again. Three are practitioner conflicts: test_same_practitioner_at_the_same_time_isnt_allowed and test_conflict_rule_and_different_practitioner (DID NOT RAISE ValueError), and test_same_time_different_practitioner_is_allowed (wrongly raised ValueError).
 
 ## C. F8-01 diagnosis and repair
 
-- Symptom / observed behaviour: [complete]
-- Expected behaviour and requirement: [complete]
-- Minimal synthetic reproduction steps: [complete]
-- Meaningful failing test path/name and exact relevant failure: [complete]
+- Symptom / observed behaviour: Two bookings for the same practitioner at the same time are both accepted or booking a different practitioner at that same time is wrongly rejected.
+- Expected behaviour and requirement: A second booking for the same practitioner at the same datetime is rejected with ValueError and the stored records stay unchanged (FR-05 / AC-04.1). But a different practitioner at the same time is allowed (AC-04.2).
+- Minimal synthetic reproduction steps: In a fresh store register patients P1 and P2 and practitioners D1 and D2. Book A1 (P1, D1, 2026-10-01 09:00). Book A2 (P2, D1, 2026-10-01 09:00). Next in another fresh store with A1 booked, book A3 (P2, D2, 2026-10-01 09:00).
+- Meaningful failing test path/name and exact relevant failure: project/tests/test_regressions.py and the output is ============================= test session starts =============================
+collecting ... collected 4 items
+
+tests/test_regressions.py::test_f8_01_same_practitioner_same_time_is_rejected FAILED [ 25%]
+tests\test_regressions.py:24 (test_f8_01_same_practitioner_same_time_is_rejected)
+services = (<smartcare.data_store.SmartCareDataStore object at 0x0000019EECFD1A90>, <smartcare.services.AppointmentService object at 0x0000019EECFD1E80>)
+
+    def test_f8_01_same_practitioner_same_time_is_rejected(services):
+        store, appointments = services
+        first = appointments.book_appointment('A1', 'P1', 'D1', WHEN)
+        before = store.list_appointments()
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests\test_regressions.py:28: Failed
+
+tests/test_regressions.py::test_f8_01_different_practitioner_same_time_is_allowed FAILED [ 50%]
+tests\test_regressions.py:35 (test_f8_01_different_practitioner_same_time_is_allowed)
+services = (<smartcare.data_store.SmartCareDataStore object at 0x0000019EECF5FB10>, <smartcare.services.AppointmentService object at 0x0000019EECF5FED0>)
+
+    def test_f8_01_different_practitioner_same_time_is_allowed(services):
+        store, appointments = services
+        appointments.book_appointment('A1', 'P1', 'D1', WHEN)
+>       second = appointments.book_appointment('A2', 'P1', 'D2', WHEN)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_regressions.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <smartcare.services.AppointmentService object at 0x0000019EECF5FED0>
+appointment_id = 'A2', patient_id = 'P1', practitioner_id = 'D2'
+date_time = datetime.datetime(2026, 10, 1, 9, 0)
+
+    def book_appointment(
+        self,
+        appointment_id: str,
+        patient_id: str,
+        practitioner_id: str,
+        date_time: datetime,
+    ) -> Appointment:
+        """Book registered participant IDs and return the stored
+        appointment.
+    
+        Raise LookupError for absent participants. Raise ValueError for
+        invalid values, duplicate appointment IDs or a practitioner
+        conflict.
+        """
+        patient = self.data_store.find_patient(patient_id)
+        practitioner = self.data_store.find_practitioner(practitioner_id)
+        if patient is None:
+            raise LookupError('Patient not found')
+        if practitioner is None:
+            raise LookupError('Practitioner not found')
+        appointment = Appointment(
+            appointment_id,
+            patient,
+            practitioner,
+            date_time,
+        )
+        if self.data_store.find_appointment(
+            appointment.appointment_id,
+        ) is not None:
+            raise ValueError('Appointment ID already exists')
+        if self.data_store.has_practitioner_conflict(
+            practitioner.practitioner_id,
+            date_time,
+        ):
+>           raise ValueError(
+                'Practitioner already has a SCHEDULED appointment at this time',
+            )
+E           ValueError: Practitioner already has a SCHEDULED appointment at this time
+
+smartcare\services.py:127: ValueError
+
+tests/test_regressions.py::test_f8_02_cancelled_appointment_is_still_found FAILED [ 75%]
+tests\test_regressions.py:43 (test_f8_02_cancelled_appointment_is_still_found)
+None != <smartcare.domain.Appointment object at 0x0000019EECFCD810>
+
+Expected :<smartcare.domain.Appointment object at 0x0000019EECFCD810>
+Actual   :None
+<Click to see difference>
+
+services = (<smartcare.data_store.SmartCareDataStore object at 0x0000019EED070410>, <smartcare.services.AppointmentService object at 0x0000019EED071090>)
+
+    def test_f8_02_cancelled_appointment_is_still_found(services):
+        store, appointments = services
+        booked = appointments.book_appointment('A1', 'P1', 'D1', WHEN)
+        cancelled = appointments.cancel_appointment('A1')
+        assert cancelled is booked
+        assert cancelled.status is AppointmentStatus.CANCELLED
+>       assert store.find_appointment('A1') is booked
+E       AssertionError: assert None is <smartcare.domain.Appointment object at 0x0000019EECFCD810>
+E        +  where None = find_appointment('A1')
+E        +    where find_appointment = <smartcare.data_store.SmartCareDataStore object at 0x0000019EED070410>.find_appointment
+
+tests\test_regressions.py:49: AssertionError
+
+tests/test_regressions.py::test_f8_02_repeated_cancellation_is_rejected_without_change FAILED [100%]
+tests\test_regressions.py:54 (test_f8_02_repeated_cancellation_is_rejected_without_change)
+services = (<smartcare.data_store.SmartCareDataStore object at 0x0000019EECFCE190>, <smartcare.services.AppointmentService object at 0x0000019EECFCE520>)
+
+    def test_f8_02_repeated_cancellation_is_rejected_without_change(services):
+        store, appointments = services
+        booked = appointments.book_appointment('A1', 'P1', 'D1', WHEN)
+        appointments.cancel_appointment('A1')
+        with pytest.raises(ValueError):
+>           appointments.cancel_appointment('A1')
+
+tests\test_regressions.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <smartcare.services.AppointmentService object at 0x0000019EECFCE520>
+appointment_id = 'A1'
+
+    def cancel_appointment(self, appointment_id: str) -> Appointment:
+        """Stage 6: cancel through the domain method and retain the
+        appointment.
+    
+        Return the cancelled object. Unknown IDs raise LookupError;
+        invalid transitions raise ValueError and leave state unchanged.
+        """
+        if not isinstance(appointment_id, str) or not appointment_id.strip():
+            raise ValueError("Appointment ID Invalid")
+    
+        if self.data_store.find_appointment(appointment_id) is None:
+>           raise LookupError("Unknown appointment ID")
+E           LookupError: Unknown appointment ID
+
+smartcare\services.py:155: LookupError
+
+
+============================== 4 failed in 0.07s ==============================
 - Human hypothesis and intended checks: see E, F8-01.
-- Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
-- Smallest justified fix / diff / why other behaviour is preserved: [complete]
-- Repair SHA / focused verification result: [complete]
+- Supported root cause and inspected code/runtime evidence: In SmartCareDataStore.has_practitioner_conflict the practitioner ID check uses `!=` instead of `==` so only a different practitioner's appointment counts as a conflict. Evidence: After booking A1 with D1 at the test time has_practitioner_conflict('D1', time) returned False and has_practitioner_conflict('D2', time) returned True. 
+- Smallest justified fix / diff / why other behaviour is preserved: Changed 'practitioner_id !=` to `practitioner_id ==` in data_store.py has_practitioner_conflict. The excluded-ID, date/time and SCHEDULED-status conditions are unchanged so cancelled and completed appointments still allow a slot and no other method or file was changed.
+- Repair SHA / focused verification result:  
 
 ## D. F8-02 diagnosis and repair
 
