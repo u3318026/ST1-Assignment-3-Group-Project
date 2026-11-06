@@ -364,9 +364,11 @@ FAILED tests/test_services.py::test_cancelled_appointment_cant_be_cancelled_agai
 - Minimal synthetic reproduction steps: In a fresh store register patient P1 and practitioner D1. Book A1 (P1, D1, 2026-10-01 09:00). Call cancel_appointment('A1'). Then call data_store.find_appointment('A1').
 - Meaningful failing test path/name and exact relevant failure: project/tests/test_regressions.py::test_f8_02_cancelled_appointment_is_still_found (AssertionError: assert None is <Appointment object>) and ::test_f8_02_repeated_cancellation_is_rejected_without_change (LookupError: Unknown appointment ID, services.py line 155). Existing tests showing the same defect: tests/test_services.py::test_cancel_appointment, ::test_cancelled_appointment_is_stored, ::test_find_cancelled_appointment, ::test_cancelled_appointment_cant_be_cancelled_again.
 - Human hypothesis and intended checks: see E, F8-02.
-- Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
-- Smallest justified fix / diff / why other behaviour is preserved: [complete]
-- Repair SHA / focused verification result: [complete]
+- Supported root cause and inspected code/runtime evidence: SmartCareDataStore.find_appointment skips cancelled appointments so it returns None for an appointment that is stored but cancelled. After booking and cancelling A1 list_appointments() contained the appointment while find_appointment('A1') returned None. A search of project/smartcare for del, pop and remove found no matches so a removal path is ruled out.
+- Smallest justified fix / diff / why other behaviour is preserved: Removed the condition that excludes cancelled appointments from find_appointment so lookup matches on ID only. The blank-ID ValueError and the None for a valid missing ID are unchanged and no other method or file changed.
+- Repair SHA / focused verification result:Sha =  full suite = 
+..................................................                                                                                                                                                                           [100%]
+50 passed in 0.04s
 
 ## E. Human-first hypotheses
 
@@ -375,12 +377,12 @@ Complete both entries BEFORE Copilot. C/D supply observed/expected/reproduction/
 ### F8-01 human entry
 Likely cause and why plausible: The practitioner ID comparison in SmartCareDataStore.has_practitioner_conflict is the wrong way around as it treats a different practitioner as a conflict. It is likely this because it fits the symptoms.
 Evidence intended to inspect / competing explanation / discriminating check: Read the practitioner condition in has_practitioner_conflict and compare it with FR-05 / AC-04.1 and AC-04.2. Run has_practitioner_conflict('D1', time) and ('D2', time) after booking with D1; a correct method gives True for D1 and False for D2. Competing explanation: The date/time or SCHEDULED-status condition could be wrong. That would not make a different practitioner wrongly conflict while the same practitioner passes so the opposite results for D1 and D2 tell the two apart.
-Member and saved sequence/time or commit showing this preceded consultation: 23df0a4 at 4:10 on 5/11/26
+Member and saved sequence/time or commit showing this preceded consultation: 23df0a4 at 4:10pm on 5/11/26
 
 ### F8-02 human entry
 Likely cause and why plausible: SmartCareDataStore.find_appointment skips cancelled appointments so it returns None for an appointment that is stored but cancelled. This fits the failing tests, the cancel succeeds then lookup returns None and the service raises LookupError before the domain check that would raise ValueError on a repeated cancel.
 Evidence intended to inspect / competing explanation / discriminating check: Read the status condition in find_appointment and compare it with FR-07 / FR-08. After booking and cancelling A1 compare list_appointments() with find_appointment('A1'). If the list contains the appointment but find returns None then lookup is hiding it. A removal path deletes the appointment. A search of project/smartcare for del, pop and remove as well as the fact that A1 is still in the list would rule that out.
-Member and saved sequence/time or commit showing this preceded consultation: 
+Member and saved sequence/time or commit showing this preceded consultation: 0b08c0f at 6:13pm on 6/11/26
 
 ## F. GitHub Copilot prompts, findings and human decisions
 
