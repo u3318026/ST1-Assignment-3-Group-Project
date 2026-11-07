@@ -366,7 +366,7 @@ FAILED tests/test_services.py::test_cancelled_appointment_cant_be_cancelled_agai
 - Human hypothesis and intended checks: see E, F8-02.
 - Supported root cause and inspected code/runtime evidence: SmartCareDataStore.find_appointment skips cancelled appointments so it returns None for an appointment that is stored but cancelled. After booking and cancelling A1 list_appointments() contained the appointment while find_appointment('A1') returned None. A search of project/smartcare for del, pop and remove found no matches so a removal path is ruled out.
 - Smallest justified fix / diff / why other behaviour is preserved: Removed the condition that excludes cancelled appointments from find_appointment so lookup matches on ID only. The blank-ID ValueError and the None for a valid missing ID are unchanged and no other method or file changed.
-- Repair SHA / focused verification result:Sha =  full suite = 
+- Repair SHA / focused verification result:Sha = a11db4d full suite = 
 ..................................................                                                                                                                                                                           [100%]
 50 passed in 0.04s
 
@@ -388,40 +388,42 @@ Member and saved sequence/time or commit showing this preceded consultation: 0b0
 
 Use the full handout prompt separately for BOTH defects, after E. Keep each actual prompt or accessible reference; include observed behaviour, expected behaviour, reproduction, failing test, human hypothesis, relevant code, three ranked causes and discriminating checks, with the no-rewrite/no-invented-requirements constraints.
 
+(The code was changed before checking with copilot (i got confused))
+
 ### F8-01 Copilot review
-Actual prompt / output reference and member: [complete]
-1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-Final human conclusion and comparison with initial hypothesis: [complete]
+Actual prompt / output reference and member: See Copilot_review_F8-01.md by Ryan
+1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot #1: the practitioner comparison is reversed (!= instead of ==). Check: compare the condition with FR-05 / AC-04.1-04.2 and the two failing tests. Observed: before the repair, same practitioner at the same time was accepted (DID NOT RAISE ValueError) and a different practitioner was rejected; before the fix has_practitioner_conflict('D1', time) returned False and ('D2', time) returned True; after changing != to == both F8-01 tests passed. Correct. Accept.
+2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot #2: the stored appointment holds the wrong practitioner. Check: look at how the Appointment is built and stored in book_appointment. Observed: the Appointment is built from the practitioner looked up by the requested ID, and the F8-01 tests passed after changing only the comparison, with no storage change. Wrong. Reject. Its suggested check also used store.get_appointment("A1"), which does not exist in this project (the method is find_appointment).
+3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot #3: a different implementation is being executed than the one shown. Check: search the project for other definitions of has_practitioner_conflict and read the traceback. The traceback pointed at services.py line 127 calling this method; editing this one line changed the results. Wrong. Reject.
+Final human conclusion and comparison with initial hypothesis: My hypothesis was correct and lines up with Copilots first hypothesis.
 
 ### F8-02 Copilot review
-Actual prompt / output reference and member: [complete]
-1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-Final human conclusion and comparison with initial hypothesis: [complete]
+Actual prompt / output reference and member: See Copilot_review_F8-02.md by Ryan
+1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot #1: find_appointment excludes cancelled appointments. Check: compare list_appointments() with find_appointment('A1') after cancelling. Observed: list_appointments() contained the appointment while find_appointment('A1') returned None; removing the status != "cancelled" condition made both F8-02 tests pass. Correct. Accept. It described the filter as possibly intentional, but FR-07 / FR-08 require cancelled appointments to stay findable, so it is a defect.
+2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot #2: the service wrongly treats a cancelled appointment as nonexistent, and the store may be meant to find only active appointments. Check: read the store contract in the original docstring and the handout. Observed: the contract is "return the stored appointment or None", with no active-only rule, and the fix was in data_store.py with services.py unchanged. Partly correct, because the service's `is None` check does turn the store's None into LookupError and explains the second-cancel symptom, but that is a consequence, not the cause. Reject as the root cause.
+3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot #3: the status value or enum mismatches "cancelled". Check: read the failing test traceback. Observed: the assertion cancelled.status is AppointmentStatus.CANCELLED passed before the failing find_appointment line, and AppointmentStatus.CANCELLED has the value 'cancelled'. Wrong. Reject.
+Final human conclusion and comparison with initial hypothesis: My hypothesis was correct (because I removed the line of code and it passed all the tests). #2 sounded reasonable but contradicted the store contract.
 
 ## G. Failing to passing regression evidence
 
 | Checkpoint | Code SHA or precise diff | Command and working directory | Actual result and artefact reference |
 |---|---|---|---|
-| F8-01 before repair | [complete] | [complete] | [complete] |
-| F8-01 after repair | [complete] | [complete] | [complete] |
-| F8-02 before repair | [complete] | [complete] | [complete] |
-| F8-02 after repair | [complete] | [complete] | [complete] |
-| Full suite after both repairs, before refactor | [complete] | [complete] | [complete] |
+| F8-01 before repair | 7f9ffa0 | `python -m pytest tests/test_regressions.py -q`, project/  | 4 failed. test_f8_01_same_practitioner_same_time_is_rejected: DID NOT RAISE ValueError. test_f8_01_different_practitioner_same_time_is_allowed: ValueError "Practitioner already has a SCHEDULED appointment at this time". The two F8-02 tests also failed. Output shown in section C. |
+| F8-01 after repair | a8368ea | `python -m pytest -q`, project/ | 6 failed, 44 passed. Both F8-01 regression tests pass; all 6 remaining failures are F8-02 (2 in test_regressions.py, 4 in test_services.py). |
+| F8-02 before repair | a8368ea | `python -m pytest -q`, project/ | Same run as above. test_f8_02_cancelled_appointment_is_still_found: AssertionError, assert None is <Appointment>. test_f8_02_repeated_cancellation_is_rejected_without_change: LookupError "Unknown appointment ID". |
+| F8-02 after repair | a11db4d | `python -m pytest -q`, project/ | 50 passed in 0.04s, including both F8-02 regression tests. |
+| Full suite after both repairs, before refactor | a11db4d | `python -m pytest -q`, project/ | 50 passed in 0.04s. |
 
-Explain how the assertions detect each relevant incorrect result and protect previous behaviour: [complete]
-Unrelated failures investigated / resolution: [complete or not applicable with reason]
+Explain how the assertions detect each relevant incorrect result and protect previous behaviour: The F8-01 same-practitioner test uses pytest.raises(ValueError), so a double booking that is accepted fails with DID NOT RAISE. It also checks that the stored list is unchanged after the rejection, that A2 was not stored and that A1 is still the same object. The different-practitioner test asserts the second booking succeeds and is stored so a wrongly rejected booking fails. The F8-02 tests assert that cancel returns the same object with status CANCELLED that stores and services lookup return that same object afterwards, that it is still in list_appointments() and that a repeated cancel raises ValueError and leaves the status CANCELLED so a lookup that hides cancelled appointments fails. The earlier tests in test_services.py and test_starter.py were kept and also failed on the same two defects. Running the full suite after each repair shows earlier behaviour still passes.
+Unrelated failures investigated / resolution: None. The 7 failures in the first prepared run were all traced to F8-01 (3) or F8-02 (4), and the 6 left after the F8-01 repair were all F8-02.
 
 ## H. Refactoring decision and before/after verification
 
-Smell and exact location: [complete]
-Small proposed structural change / why justified: [complete before editing]
-External behaviour to preserve / relevant tests: [complete]
+Smell and exact location: Magic status string in project/smartcare/data_store.py, SmartCareDataStore.has_practitioner_conflict: the condition `appointment.status.value == "scheduled"` compares against a hard-coded string, although the existing AppointmentStatus enum (already imported in this file) defines SCHEDULED.
+Small proposed structural change / why justified: Replace the condition with `appointment.status is AppointmentStatus.SCHEDULED`. This is justified because the string duplicates the enum's value and would silently stop matching if the value were ever changed or mistyped, whereas the enum member is checked consistently with the rest of the code (for example Appointment.cancel uses `is not AppointmentStatus.SCHEDULED`). It changes how the check is written, not what it returns.
+External behaviour to preserve / relevant tests: Has_practitioner_conflict must still return True only for another appointment (a different ID from the excluded one) with the same practitioner ID, the same date/time and status SCHEDULED and False otherwise so cancelled and completed appointments still don't block a slot. Relevant tests: Both F8-01 tests in tests/test_regressions.py, test_same_practitioner_at_the_same_time_isnt_allowed and test_same_time_different_practitioner_is_allowed in tests/test_services.py, test_conflict_rule_and_different_practitioner in tests/test_starter.py and the full suite.
 Before result: see G, full passing suite.
-Actual change / diff / separate refactor SHA: [complete]
+Actual change / diff / separate refactor SHA: Replaced `and appointment.status.value == "scheduled"` with `and appointment.status is AppointmentStatus.SCHEDULED):` Refactor Sha = 
 Focused and full after-refactor commands / working directory / results / evidence: [complete]
 Result — accepted, revised or rejected / reason / behaviour-preservation conclusion: [complete]
 
@@ -446,43 +448,43 @@ Each member's substantive contribution and artefact: [complete]
 
 1. What should an engineer do before changing code in response to a failure?
 
-Response: [complete]
+Response: Test different causes to narrow down what the cause is.
 
-2. Where should expected behaviour come from during debugging?
+2. Where should expected behavior come from during debugging?
 
-Response: [complete]
+Response: Expected behavior is the behavior that the code is intended to have with the code that has currently been implemented. (It is the output that is expected from the code).
 
 3. What is a debugging hypothesis?
 
-Response: [complete]
+Response: A hypothesis of what in the code is leading to a bug and how it does so.
 
 4. What is a regression test and why is it retained?
 
-Response: [complete]
+Response: Tests that were ran before a bugfix and are ran after a bugfix to check that the bugfix didn't break anything.
 
 5. What is meant by root cause?
 
-Response: [complete]
+Response: The origin of the problem that when fixed will remove the solve the problem.
 
 6. What is refactoring?
 
-Response: [complete]
+Response: Improving the code without changing its behavior or functionality.
 
 7. What is a swallowed exception?
 
-Response: [complete]
+Response: When a piece of code catches an error during execution and then ignores it.
 
 8. What is a code smell?
 
-Response: [complete]
+Response: It is code that leads to inefficiencies and is hard to maintain.
 
 9. How should GitHub Copilot-generated debugging diagnoses be treated?
 
-Response: [complete]
+Response: They should be checked, scrutinized and only used as advisement.
 
 10. What is the Stage 8 engineering rule?
 
-Response: [complete]
+Response: Diagnose before fixing.
 
 ## L. Completion and handover
 
