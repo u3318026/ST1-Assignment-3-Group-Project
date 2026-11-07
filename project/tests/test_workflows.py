@@ -1,10 +1,12 @@
 from datetime import datetime
 
 import pytest
+import builtins
 
 from smartcare.data_store import SmartCareDataStore
 from smartcare.domain import AppointmentStatus
 from smartcare.services import (AppointmentService, PatientService, PractitionerService)
+from smartcare.console import run_menu
 
 WHEN = datetime(1955, 10, 9, 0, 0)
 
@@ -134,3 +136,51 @@ def test_freed_slot_can_be_booked_again_and_history_stays(setup):
     assert appointments.list_practitioner_appointments('D1') == [first, third]
     assert appointments.list_practitioner_appointments(
         'D1', AppointmentStatus.SCHEDULED) == [third]
+
+def run_menu_with(monkeypatch, capsys, lines):
+    answers = iter(lines)
+    monkeypatch.setattr(builtins, 'input', lambda prompt='': next(answers))
+    run_menu()
+    return capsys.readouterr().out
+
+
+def test_menu_full_workflow(monkeypatch, capsys):
+    out = run_menu_with(monkeypatch, capsys, [
+        '1', 'P1', 'Alex Example',
+        '3', 'D1', 'Taylor Example', 'General practice',
+        '3', 'D2', 'Jordan Example', 'Cardiology',
+        '5', 'A1', 'P1', 'D1', '2026-10-01 09:00',
+        '5', 'A-CONFLICT', 'P1', 'D1', '2026-10-01 09:00',
+        '5', 'A2', 'P1', 'D2', '2026-10-01 09:00',
+        '6', 'A1',
+        '7', 'A1',
+        '8', 'D1', '',
+        '8', 'D1', 'scheduled',
+        '5', 'A3', 'P1', 'D1', '2026-10-01 09:00',
+        '0',
+    ])
+    assert ('Error: Practitioner already has a SCHEDULED appointment '
+            'at this time') in out
+    assert 'Appointment cancelled successfully.' in out
+    assert 'Status         : Cancelled' in out
+    assert 'No appointments found.' in out
+    assert out.count('Appointment booked successfully.') == 3
+    assert 'Goodbye. Session data discarded.' in out
+
+
+def test_menu_recovers_from_bad_input(monkeypatch, capsys):
+    out = run_menu_with(monkeypatch, capsys, [
+        '1', 'P1', 'Alex Example',
+        '3', 'D1', 'Taylor Example', 'General practice',
+        '99',
+        '5', 'BAD', 'P1', 'D1', 'not a date',
+        '5', 'BAD', 'P1', 'D1', '2026-10-01 09:00',
+        '8', 'D1', 'pending',
+        '2', 'P1',
+        '0',
+    ])
+    assert 'Unknown choice. Choose a number from 0 to 8.' in out
+    assert 'Error: Use date/time format YYYY-MM-DD HH:MM' in out
+    assert out.count('Appointment booked successfully.') == 1
+    assert 'Error: Status must be scheduled, cancelled or completed' in out
+    assert 'Patient found. P1: Alex Example' in out
