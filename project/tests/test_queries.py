@@ -84,3 +84,11 @@ def test_result_order_matches_the_named_key():
     source = [make('A2', D1, TEN), make('A1', D1, NINE)]
     assert select_appointments(source, 'D1') == sorted(
         source, key=appointment_sort_key)
+
+def test_already_sorted_input_gives_a_new_list():
+    a1 = make('A1', D1, NINE)
+    a2 = make('A2', D1, TEN)
+    source = [a1, a2]
+    result = select_appointments(source, 'D1')
+    assert result == [a1, a2]
+    assert result is not source
