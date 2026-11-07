@@ -423,9 +423,11 @@ Smell and exact location: Magic status string in project/smartcare/data_store.py
 Small proposed structural change / why justified: Replace the condition with `appointment.status is AppointmentStatus.SCHEDULED`. This is justified because the string duplicates the enum's value and would silently stop matching if the value were ever changed or mistyped, whereas the enum member is checked consistently with the rest of the code (for example Appointment.cancel uses `is not AppointmentStatus.SCHEDULED`). It changes how the check is written, not what it returns.
 External behaviour to preserve / relevant tests: Has_practitioner_conflict must still return True only for another appointment (a different ID from the excluded one) with the same practitioner ID, the same date/time and status SCHEDULED and False otherwise so cancelled and completed appointments still don't block a slot. Relevant tests: Both F8-01 tests in tests/test_regressions.py, test_same_practitioner_at_the_same_time_isnt_allowed and test_same_time_different_practitioner_is_allowed in tests/test_services.py, test_conflict_rule_and_different_practitioner in tests/test_starter.py and the full suite.
 Before result: see G, full passing suite.
-Actual change / diff / separate refactor SHA: Replaced `and appointment.status.value == "scheduled"` with `and appointment.status is AppointmentStatus.SCHEDULED):` Refactor Sha = 
-Focused and full after-refactor commands / working directory / results / evidence: [complete]
-Result — accepted, revised or rejected / reason / behaviour-preservation conclusion: [complete]
+Actual change / diff / separate refactor SHA: Replaced `and appointment.status.value == "scheduled"` with `and appointment.status is AppointmentStatus.SCHEDULED):` Refactor Sha = e68be00
+Focused and full after-refactor commands / working directory / results / evidence: input: python -m pytest -q output: 
+..................................................                                                                                                                                                                          [100%]
+50 passed in 0.04s
+Result — accepted, revised or rejected / reason / behaviour-preservation conclusion: Accepted the tests passed and give the same results as before. The only difference is that now the enum is more consistant in the code.
 
 ## I. Git, human review and integration
 
@@ -436,13 +438,13 @@ Key human feedback, difference from Copilot findings and response/outcome: [comp
 Actual review approval / merge evidence: [complete]
 Integrated code SHA and team pull/retest command / working directory / result: [complete]
 Evidence-only later SHA / explanation if different: [complete or not applicable]
-Each member's substantive contribution and artefact: [complete]
+Each member's substantive contribution and artifact: [complete]
 
 ## J. Required reflections
 
-1. Which Copilot diagnosis appeared convincing but lacked evidence? [complete; report honestly if none and discuss the least-supported real suggestion]
-2. What evidence changed your group's view? [complete]
-3. How did regression tests protect the refactoring? [complete]
+1. Which Copilot diagnosis appeared convincing but lacked evidence? Copilot's #2 for F8-02. It could be true but had no evidence leading to that conclusion. (And it turned out not to be the problem).
+2. What evidence changed your group's view? The failing regression tests, the check that list_appointments() still held the cancelled appointment while find_appointment returned None and the opposite D1/D2 results from has_practitioner_conflict. A search for del, pop and remove ruled out a removal path.
+3. How did regression tests protect the refactoring? The full suite gave the same result before and after the refactoring. If its result changed than we would know that we had made an error in the refactoring by accidently changing a behavior.
 
 ## K. Ten formative questions
 
@@ -488,13 +490,13 @@ Response: Diagnose before fixing.
 
 ## L. Completion and handover
 
-- [ ] Existing project, earlier tests and stage records preserved.
-- [ ] Passing Stage 7 SHA and safe preparation details recorded.
-- [ ] Both defects reproduced with meaningful failing tests.
-- [ ] Both human hypotheses recorded before Copilot; actual suggestions evaluated with evidence.
-- [ ] Supported causes and minimal repairs explained; focused and full regression results recorded.
-- [ ] One genuine refactor verified under passing before/after tests.
-- [ ] Human PR review, feedback resolution and integrated retest recorded.
+- [1] Existing project, earlier tests and stage records preserved.
+- [1] Passing Stage 7 SHA and safe preparation details recorded.
+- [1] Both defects reproduced with meaningful failing tests.
+- [1] Both human hypotheses recorded before Copilot; actual suggestions evaluated with evidence.
+- [1] Supported causes and minimal repairs explained; focused and full regression results recorded.
+- [1] One genuine refactor verified under passing before/after tests.
+- [1] Human PR review, feedback resolution and integrated retest recorded.
 - [ ] Tutorial, three reflections and ten formative responses complete.
 - [ ] Local recovery metadata excluded from submitted source.
 - [ ] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
