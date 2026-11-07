@@ -279,7 +279,7 @@ The engineering rule for stage 7 is to make sure your assertions are strong and 
 
 ## O Stage Completion
 
-Tested Stage 7 main SHA: [complete]
+Tested Stage 7 main SHA: 684570032775f3fa0a427377b0d003aaf6443629
 Full-suite result: all 45 tests pass
 Unresolved defects and effect on baseline: None
 Clean working tree and integration evidence: Completed
