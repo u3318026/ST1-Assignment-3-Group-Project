@@ -76,20 +76,37 @@ Cover QRY-01–04, FP-01–03, UI-01–02 and relevant FR-01–09. Explain empty
 
 | Requirement / test ID | Code location | Case and meaningful assertion | Actual result | Evidence link |
 |---|---|---|---|---|
-| | | | | |
+| FP-03 / test_sort_key_is_date_time_then_id | queries.py appointment_sort_key | Key equals (date_time, appointment_id) | Passed | see at bottem of C |
+| QRY-01 / test_only_requested_practitioner_is_returned | queries.py select_appointments | D1 and D2 appointments given, only D1's come back. | Passed | see at bottem of C |
+| QRY-02 / test_default_includes_every_status, test_each_status_filter_returns_only_that_status, test_no_match_gives_empty_list | select_appointments | No status gives all three statuses. Each status gives only its own. No match gives an empty list. | Passed | see at bottem of C |
+| QRY-03 / test_sorted_by_time_then_id_for_equal_times | select_appointments | Result IDs are A1, A2, A9. Equal times are broken by ID using cancelled and scheduled appointments at the same time. | Passed | see at bottem of C |
+| FP-01 / test_repeated_calls_give_the_same_result | select_appointments | Two calls with the same input give equal results. | Passed | see at bottem of C |
+| FP-02 / test_result_is_a_new_list_with_the_same_objects, test_empty_input_gives_a_new_empty_list, test_already_sorted_input_gives_a_new_list | select_appointments | Result is a different list from the source but holds the same Appointment objects. | Passed | see at bottem of C |
+| FP-02 / test_source_list_and_objects_are_unchanged | select_appointments | Source order and each appointment's ID. Date/time and status are the same after the call. | Passed | see at bottem of C |
+| FP-03 / test_result_order_matches_the_named_key | select_appointments | Result equals sorted(source, key=appointment_sort_key) | Passed | see at bottem of C |
+| QRY-04 / test_known_practitioner_with_no_appointments_gives_empty_list | services.py list_practitioner_appointments | Known practitioner, no appointments, empty list and no error. | Passed | see at bottem of C |
+| QRY-04 / test_unknown_practitioner_raises_lookup_error, test_blank_practitioner_id_raises_value_error. | list_practitioner_appointments | Unknown ID gives LookupError. Blank ID gives ValueError. | Passed | see at bottem of C |
+| QRY-04 / test_text_status_raises_value_error_not_empty_list | list_practitioner_appointments | Status 'scheduled' (text) gives ValueError not an empty list. | Passed | see at bottem of C |
+| FR-07 / test_cancelled_appointment_is_kept_found_and_listed | store and services | After cancelling lookup returns the same object. The all-status list and CANCELLED list include it. The SCHEDULED list does not. | Passed | see at bottem of C |
+
+Evidence: 
+Input: python -m pytest -q
+Output: ..............................................................................                                                                                                                                              [100%]
+78 passed in 0.06s
+Here is a screenshot of it: ![img.png](img.png)
 
 Include practitioner isolation, every enum status/default all, equal-time ID tie-break, named-key reuse, repeated calls, empty/already-sorted fresh lists, unchanged source order/fields, known-empty/unknown/invalid service cases and retained history.
 
-Purity explanation from code inspection, including absence of hidden state and I/O: <!-- response -->
-What the tests do and do not establish: <!-- response -->
+Purity explanation from code inspection, including absence of hidden state and I/O: select_appointments gets everything from its arguments (the list, the practitioner ID and the status). It iterates through the list, adds the matches to a new list and returns the sorted(... ) of that new list so it never alters the source list. It has no global variables, no print, no input, and it does not modify the store or any service. Appointment_sort_key only accesses two properties of the appointment passed to it.
+What the tests do and do not establish: The tests show the correct result for specificaly the cases tested. They do not prove that there is no hidden state or input/output. The tests cant cover every single input and may have missed one that breaks the code somehow or leads to an unexpected outcome.
 
 ## D. Integrated console and workflow evidence
 
 | Scenario / acceptance ID | Reproducible inputs / artefact | Expected result | Observed result and state check | Evidence link |
 |---|---|---|---|---|
-| UI-01 full menu workflow | | | | |
-| UI-02 invalid-input recovery | | | | |
-| Automated service workflow | | | | |
+| UI-01 full menu workflow | stage09/evidence/ui01_input.md ran with `Get-Content ..\stage09\evidence\ui01_input.md | python main.py --interactive` (The vertical bar is part of the line that was ran and not signifying that this is the expected output). | Register and find participants; book A1; conflict rejected; A2 with D2 allowed; cancel A1; A1 found as Cancelled; all-status list shows A1; SCHEDULED list is empty; A3 booked in the freed slot; unknown choice handled; normal exit. | Follows expected result | stage09/evidence/ui01_output.md |
+| UI-02 invalid-input recovery | stage09/evidence/ui02_input.md ran with `Get-Content ..\stage09\evidence\ui02_input.md | python main.py --interactive` (The vertical bar is part of the line that was ran and not signifying that this is the expected output). | Each bad input (unknown choice, blank ID, unknown ID, duplicate patient, unknown patient in a booking, bad date, impossible date, unknown appointment, repeated cancel, invalid status) shows an Error message and the menu continues. The later BAD-TEXT booking succeeds so the failed one did not reserve the ID. | Follows expected result | stage09/evidence/ui02_output.md |
+| Automated service workflow | tests/test_workflows.py (service tests and test_menu_full_workflow, test_menu_recovers_from_bad_input) | Conflict, duplicate and unknown-participant rejections leave stored records unchanged; different practitioner allowed; cancel keeps history; repeated cancel rejected; freed slot can be rebooked. | They all passed. 78 passed in 0.06s | ![img.png](img.png) |
 
 Include registration/find, booking, conflict rejection, different-practitioner booking, cancellation, retrieval, listing/filtering, freed slot and exit; duplicate/unknown/blank IDs, malformed/impossible date, invalid status, unknown choice and repeated cancellation. Identify before/after state and subsequent successful action.
 
@@ -113,16 +130,16 @@ Responsibility check: explain how domain invariants, shared-store collections, s
 
 ## G. Ten formative answers
 
-1. What makes select_appointments pure, and what side effect breaks purity? <!-- response -->
-2. Which explicit inputs are needed, and why avoid a global store? <!-- response -->
-3. How can a new list reuse Appointment objects safely? <!-- response -->
-4. Why use a named key, and what breaks equal-time ties? <!-- response -->
-5. How do default and explicit status filters differ? <!-- response -->
-6. How do empty, unknown practitioner and invalid filter cases differ? <!-- response -->
-7. Which console errors recover, and how is unchanged state checked? <!-- response -->
-8. What is data integrity for registered participants, conflicts and history? <!-- response -->
-9. What is Copilot's review role, and who verifies findings? <!-- response -->
-10. How do pure functions and OOP responsibilities work together? <!-- response -->
+1. What makes select_appointments pure, and what side effect breaks purity? select_appointments is pure since it takes everything it needs through its parameters, returns a result and doesn't change anything else. Any change that happens outside it breaks the purity: sorting the original list printing reading typed input, or touching a global variable.
+2. Which explicit inputs are needed, and why avoid a global store? It needs the list of appointments, the practitioner id and the status (or none). We don't want a global store, as then the result depends on hidden data and it becomes harder to test and could change without caller knowing.
+3. How can a new list reuse Appointment objects safely? The new list can hold the same appointment objects as the old one (not copies) so long as the function only reads them and never modifies them. The new list can then be sorted or filtered without touching the old one.
+4. Why use a named key, and what breaks equal-time ties? A named key is one function that states the way appointments are ordered so the query and the tests all use the same rule. The key is date/time then appointment ID. If the ID were not included appointment at the same time would simply remain in whichever order they arrived in so could change.
+5. How do default and explicit status filters differ? The default (no status) shows every appointment including cancelled and completed ones. An explicit status shows only the appointments with that status.
+6. How do empty, unknown practitioner and invalid filter cases differ? Empty is the case where a real practitioner exists but has no matching appointments and so you are returned an empty list and no error. Unknown is the case where the practitioner ID does not exist in the system and you are returned a LookupError. Invalid is the case where the input itself is wrong, for example a blank ID, or a status which is typed into the system in text not an AppointmentStatus and so you get back a ValueError.
+7. Which console errors recover, and how is unchanged state checked? The console catches and recovers from ValueError and LookupError for example, bad date, unknown, or duplicate ID, booking conflict, bad status, repeated cancel or an unknown menu choice. To see if anything has changed, list or find the records before and after, look at the failed id wasn't stored and look at the next valid action.
+8. What is data integrity for registered participants, conflicts and history? Data integrity means the records stay correct and consistent. An appointment must use the real registered patient and practitioner. A practitioner can't be double-booked at the same time and cancelled appointments stay stored so history isn't lost.
+9. What is Copilot's review role, and who verifies findings? Copilot is an advisor that suggests things to check or do but everything it does must be verified by the human by checking it against the code, requirements or tests.
+10. How do pure functions and OOP responsibilities work together? Pure functions handle lists. The objects each do one job. Domain objects keep the rules, the store keeps the records and the services and console talk to the user. The console dosent decide the rules for talking to the user it just calls services.
 
 ## H. Review, completion and common handover
 
