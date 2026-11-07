@@ -6,7 +6,7 @@ All Assignment 3 stage materials are provided from the beginning. Complete this 
 
 Group/tutorial: Wed 2:30 - 4:30 group 6
 Members and UG/PG cohorts: Ryan grieves(UG), Tamas Szucs(UG) and Md Tahmid UI Islam Tonmoy(PG)
-Record owner / contribution links for each member: [complete]
+Record owner / contribution links for each member: Done by Ryan and Tamas reviewed the branch merge.
 
 Use concise results and accessible artifact links rather than copying entire logs. Keep human-first entries before consulting GitHub Copilot. Link shared evidence once; do not repeat it across sections. No entries below are specimen answers or claimed results.
 
@@ -501,7 +501,7 @@ Response: Diagnose before fixing.
 - [ ] Local recovery metadata excluded from submitted source.
 - [ ] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
 
-Verified integrated code SHA / result: see I.
+Verified integrated code SHA / result: 2d699a1
 Submitted SHA and evidence-only difference if any: [complete]
 Unresolved issues or incomplete checks / owner / next action: [complete]
 Handover note: [complete]
