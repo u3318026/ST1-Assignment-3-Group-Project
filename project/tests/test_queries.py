@@ -4,8 +4,8 @@ from smartcare.domain import(Appointment, AppointmentStatus, Patient, Practition
 from smartcare.queries import appointment_sort_key, select_appointments
 
 PATIENT = Patient("P1", "Harry")
-D1 = Practitioner("D1", "House", "Md'ing")
-D2 = Practitioner("D2", "Martin", "Time travel")
+D1 = Practitioner("D1", "House", "MDing")
+D2 = Practitioner("D2", "Martin", "Time Travel")
 NINE = datetime(1955, 10, 9, 0, 0)
 TEN = datetime(1985, 6, 5, 5, 0)
 
