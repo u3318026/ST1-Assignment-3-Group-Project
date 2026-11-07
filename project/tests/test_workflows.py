@@ -184,3 +184,25 @@ def test_menu_recovers_from_bad_input(monkeypatch, capsys):
     assert out.count('Appointment booked successfully.') == 1
     assert 'Error: Status must be scheduled, cancelled or completed' in out
     assert 'Patient found. P1: Alex Example' in out
+
+def test_invalid_status_values_raise_value_error(setup):
+    store, appointments = setup
+    for bad in (123, object(), [], 'SCHEDULED'):
+        with pytest.raises(ValueError):
+            appointments.list_practitioner_appointments('D1', bad)
+
+
+def test_menu_status_filters_cancelled_and_completed(monkeypatch, capsys):
+    out = run_menu_with(monkeypatch, capsys, [
+        '1', 'P1', 'Alex Example',
+        '3', 'D1', 'Taylor Example', 'General practice',
+        '5', 'A1', 'P1', 'D1', '2026-10-01 09:00',
+        '6', 'A1',
+        '8', 'D1', 'cancelled',
+        '8', 'D1', 'completed',
+        '0',
+    ])
+    assert 'Filter: Cancelled' in out
+    assert 'A1: P1 with D1, 2026-10-01 09:00, cancelled' in out
+    assert 'Filter: Completed' in out
+    assert 'No appointments found.' in out

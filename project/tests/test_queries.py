@@ -92,3 +92,10 @@ def test_already_sorted_input_gives_a_new_list():
     result = select_appointments(source, 'D1')
     assert result == [a1, a2]
     assert result is not source
+
+def test_result_holds_the_same_objects_in_order():
+    a1 = make('A1', D1, NINE)
+    a2 = make('A2', D1, TEN)
+    result = select_appointments([a2, a1], 'D1')
+    assert result[0] is a1
+    assert result[1] is a2

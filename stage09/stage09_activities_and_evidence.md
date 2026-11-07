@@ -112,21 +112,27 @@ Include registration/find, booking, conflict rejection, different-practitioner b
 
 ## E. GitHub Copilot review and human decisions
 
-Human design completed before AI: <!-- reference -->
-Actual prompt/context supplied: <!-- paste or accessible reference -->
-Actual response: <!-- accessible reference -->
+Human design completed before AI:Commit before Copilot = 3419a64
+Actual prompt/context supplied: stage09/Copilot_Prompt.md
+Actual response: stage09/Copilot_Output.md
 
 | AI finding | Code/test evidence | Severity | Accept/Modify/Reject and reason | Change or no change | Actual verification |
 |---|---|---|---|---|---|
-| | | | | | |
+| Blank ID not validated | test_blank_practitioner_id_raises_value_error passes | Not a defect | Reject its not a problem because the test passed | no change | 78 passed |
+| Service relies on store for validation. | Handout: “validate the practitioner using the existing store contract”; book_appointment does the same. | Not a defect. | Reject: duplicating the store’s rules is over-engineering. | no change | 78 passed |
+| Trimming ‘ D1 ‘ not a rule | Handout requires using the registered practitioner’s ID; store trims IDs; test_id_with_spaces_still_finds_appointments passes. | Not a defect | Reject: the rule is in the handout. | no change | 78 passed |
+| No invalid-status tests beyond text. | Service uses isinstance; only ‘scheduled’ was tested | Not severe is optional | Accept | Added test_invalid_status_values_raise_value_error. | 81 passed (New tests added) |
+| No cancelled-in-ordering test. | test_sorted_by_time_then_id_for_equal_times has a CANCELLED and two SCHEDULED appointments. | not a defect | Reject: Already covered. | no change | 81 passed |
+| Identity only for one object. | No __eq__ on Appointment, so list equality already compares identity. No explicit multi-item is check. | Not severe is optional | Modify: add a small test. | Added test_result_holds_the_same_objects_in_order | 81 passed |
+| Console enum conversion not fully tested. | Menu tests only used blank and ‘scheduled’ | Not severe is optional | Accept | Added test_menu_status_filters_cancelled_and_completed | 81 passed |
 
-Responsibility check: explain how domain invariants, shared-store collections, service coordination, pure queries and console effects remain separate: <!-- response -->
+Responsibility check: explain how domain invariants, shared-store collections, service coordination, pure queries and console effects remain separate: Domain objects keep their own rules. The data store keeps the three collections, checks lookups and that appointment participants are the registered objects. Services coordinate: They find the practitioner, check the status type and call the query. The pure query only filters and sorts the list it is given with no printing, input or store access. The console only asks questions, converts text to the enum, calls services and prints errors.
 
 ## F. Required reflections
 
-1. Which integration concern was architectural rather than a filtering/sorting detail? <!-- response -->
-2. Which Copilot suggestion did you reject as over-engineering, and why? <!-- response -->
-3. How did you prove cancelled appointments remain retrievable and listable in the same session? <!-- response -->
+1. Which integration concern was architectural rather than a filtering/sorting detail? Where the checks belong.
+2. Which Copilot suggestion did you reject as over-engineering, and why? I rejected "Service relies on store for validation." for the reason of over engineering because it would involve getting service to validate practitioner id when store already does that.
+3. How did you prove cancelled appointments remain retrievable and listable in the same session? After cancelling store.find_appointment and the service lookup both return the same object with status CANCELLED. Rhe all-status listing and the CANCELLED listing include it and the SCHEDULED listing leaves it out. This is checked in test_cancelled_appointment_is_kept_found_and_listed and shown in the UI-01 run.
 
 ## G. Ten formative answers
 
