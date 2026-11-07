@@ -87,48 +87,46 @@ Create at least two focused issues. Add a linked practitioner-lookup issue or an
 
 Repeat this block per PR. Record actual events, not planned approvals.
 
-we are all working on the main so we dont need to be making constant pull requests.
-
-- PR link and title: [response]
-- Linked issue and requirement: [response]
-- Feature branch: [response]
-- Changed behaviour: [response]
-- Meaningful commits: [links]
-- Test command, directory and observed result: [response]
-- Another-member reviewer: [response]
-- Human observations recorded before Copilot: [link and time]
-- Requirement, responsibilities, test assertions and unrelated-scope checks: [response]
-- Key feedback: [response]
-- Author response/change and verification: [response]
-- Reviewer recheck and approval: [link]
-- Merge outcome and SHA: [response]
-- Significant Copilot assistance: [summary or none]
-- Linked issue closure: [response]
-- Each member updated main: [member and confirmation]
-- Integrated verification after merge: [command, directory, result and code SHA]
+- PR link and title: Debug/stage8
+- Linked issue and requirement: Stage 8 progress
+- Feature branch: Debug/stage8
+- Changed behaviour: Completed work for stage 8
+- Meaningful commits: Fix F8-01 and update Stage 8 record, commit for f8-01, required commit for f8-02, all test passed sha for D F8-02 diagnosis and repair, refactor sha, Ready for integration (probably)
+- Test command, directory and observed result: 
+- Another-member reviewer: Ryan Greives and Tamas Szucs
+- Human observations recorded before Copilot: 7/11/2026 12:27pm 
+- Requirement, responsibilities, test assertions and unrelated-scope checks: Reversed practitioner comparison in has_practitioner_conflict, Practitioner identity mismatch elsewhere in the model (Possible but less likely), find_appointment() intentionally excludes CANCELLED appointments (Most likely), Service-layer lookup logic incorrectly treats "not found" and "cancelled" as the same thing (Possible but secondary), 
+- Key feedback: Make sure to meet each of those requirements in testing
+- Author response/change and verification: Completed
+- Reviewer recheck and approval: Completed
+- Merge outcome and SHA: Completed with no issues, sha = 82beacf55cf879ab02fc6ae8d2d49be1941724e6
+- Significant Copilot assistance: None
+- Linked issue closure: Stage 8 Completion
+- Each member updated main: Ryan Greives
+- Integrated verification after merge: sha = 82beacf55cf879ab02fc6ae8d2d49be1941724e6
 
 ## H Copilot collaboration record
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
 
-- Member and task: [response]
-- Prompt/purpose and relevant issue/diff: [response]
-- Summary of output: [response]
-- Human check against actual code, requirements and tests: [response]
-- Decision — Accept / Modify / Reject: [select]
-- Reason: [response]
-- Verification/evidence: [link and result]
+- Member and task: Ryan Greives, Review Stage 8
+- Prompt/purpose and relevant issue/diff: Completing Stage 8
+- Summary of output: Reversed practitioner comparison in has_practitioner_conflict, Practitioner identity mismatch elsewhere in the model (Possible but less likely), find_appointment() intentionally excludes CANCELLED appointments (Most likely), Service-layer lookup logic incorrectly treats "not found" and "cancelled" as the same thing (Possible but secondary), 
+- Human check against actual code, requirements and tests: Tests are all passing as per requirements
+- Decision — Accept / Modify / Reject: Accept
+- Reason: Meaningful addition to the enhancement of our code
+- Verification/evidence: Check Copilot_review_F8-01.md for more information, all verified
 
 ## I Human versus Copilot review comparison
 
-- Human reviewer noticed before consulting Copilot: [response]
-- Copilot noticed: [response]
-- Overlap: [response]
-- What did the human reviewer notice that Copilot did not: [response]
-- What did Copilot identify that the human reviewer initially missed: [response]
-- Unsupported or incorrect Copilot suggestion: [response or none identified with explanation]
-- Human judgement accepted, modified or rejected, and why: [response]
-- Which evidence justified merge approval: [response]
+- Human reviewer noticed before consulting Copilot: Something that we noticed when reviewing was that the practitioner id was being stored elswhere in the code away from the immediate function being tested.
+- Copilot noticed: Reversed practitioner comparison in has_practitioner_conflict, Practitioner identity mismatch elsewhere in the model (Possible but less likely), find_appointment() intentionally excludes CANCELLED appointments (Most likely), Service-layer lookup logic incorrectly treats "not found" and "cancelled" as the same thing (Possible but secondary),
+- Overlap: We didnt have any overlap with the copilot review, we had completely different results from our respective reveiws.
+- What did the human reviewer notice that Copilot did not: the practitioner id was being stored elswhere in the code away from the immediate function being tested.
+- What did Copilot identify that the human reviewer initially missed: Reversed practitioner comparison in has_practitioner_conflict, We didn't realise this since weren't looking for whether the reversed roles would work, we were just looking for whether the original method would work, if we reverse we should see the same output if it wasnt but since we diddnt realise and copilot did, this is something it noticed that we didnt.
+- Unsupported or incorrect Copilot suggestion: None found, since copilot was working off of the requirements built around the requirements of this assessment, it wasnt hallucinating or making judgements outside of the indicated scope.
+- Human judgement accepted, modified or rejected, and why: Accepted, because it was meaningful towards our teams success
+- Which evidence justified merge approval: Human Evidence justified the merge approval since majority of the reveiw and the everything of the work was human.
 
 ## J Contributions
 
