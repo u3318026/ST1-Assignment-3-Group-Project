@@ -1,31 +1,46 @@
-# SmartCare Stage 6 starter
+# SmartCare
 
-Requirements baseline: SmartCare A3 2026 revision 2. Python 3.13 and pytest 8.3.5 verified. Runtime uses only the standard library.
+Requirements baseline: SmartCare A3 2026 revision 2. The application uses only the Python standard library. The Stage 10 test suite passed locally with Python 3.12.10 and pytest 8.3.5.
 
-From this directory, using a Python environment with the development dependency installed:
+## Run SmartCare
+
+Run these commands from the `project/` directory using your project’s Python environment:
 
 ```sh
+python -m pip install -r requirements-dev.txt
 python main.py
-python -m pytest
+python main.py --interactive
+python -m pytest -q
 ```
 
-If needed in your approved environment: `python -m pip install -r requirements-dev.txt`.
+`python main.py` runs the demo with synthetic records. Use `--interactive` to open the console menu. Use synthetic information only.
 
-The demo registers synthetic records and books/finds an appointment. All supplied tests pass. Data exists only in this session and is lost on exit; FR-10 restart persistence is retired. Use synthetic information only.
+## How the project is organised
 
-`domain.py` contains the entities, status and guarded cancellation. `data_store.py` holds three dictionaries through add/find/list methods. The three services share that object. Supplied registration, booking, appointment lookup and conflict checking work. IDs are trimmed, non-blank and case-sensitive. Properties provide read-only identity/appointment state; changes go through domain methods. No special architecture terminology is required.
+- `domain.py` defines the entities and guards appointment state changes.
+- `data_store.py` holds patients, practitioners and appointments for the current session.
+- `services.py` coordinates registration, lookup, booking, cancellation, listing and rescheduling.
+- `queries.py` filters and sorts appointment listings.
+- `console.py` handles interaction with the user.
 
-Stage 6 TODOs: service patient/practitioner lookup and cancellation. Stage 9 TODOs: pure query, named sort key, service listing and interactive menu. The starter TODO contracts are in docstrings. All three Stage 6 TODO calls deliberately raise NotImplementedError; future TODOs remain stubs. No PG rescheduling or assurance solution is supplied.
+IDs are trimmed, non-blank and case-sensitive. The console expects `YYYY-MM-DD HH:MM`. Service booking takes a local `datetime` at minute precision. A store lookup returns `None` if a valid ID is absent; a service lookup raises `LookupError`. Invalid values, duplicates, conflicts and illegal transitions raise `ValueError`.
 
-Service booking accepts IDs and a `datetime` (local, minute precision). Console parser accepts exactly `YYYY-MM-DD HH:MM`. Store lookups return None when absent; service lookups raise LookupError. Invalid values, duplicates, conflicts and illegal transitions raise ValueError. Lists are new containers holding the stored objects. No age, duration, patient-conflict or past-date rules apply.
+## Stage 10: Appointment rescheduling
 
-# Running Smartcare
-python main.py # runs the demo
-python main.py --interactive # runs the menu
-python -m pytest -q # runs all the tests
+Use `AppointmentService.reschedule_appointment(appointment_id, new_date_time=...)`
+to move an existing scheduled appointment to a valid time. The service returns
+the same appointment object and preserves its ID, participants and status.
 
-# limits
-- Data is kept in memory for one session only. Everything is lost when you exit.
-- cancelling keeps the appointment in memory with the status cancelled. (if you want to rebook an appointment you have to change the appointment id).
-- A practitioner cant have 2 scheduled appointments at the same time
-- Not included: rescheduling, notifications, saving to a file or database, patient clashes or appointment length.
+A valid same-time request leaves the appointment unchanged. A move is rejected
+if another scheduled appointment for the same practitioner occupies the new
+time. After a successful move, the old slot becomes available, and lookup and
+sorted practitioner listings reflect the new time.
+
+Rescheduling is available through the service. The console menu is unchanged.
+
+## Limitations
+
+- Data is held in memory for one session and is lost when the program exits.
+- Cancellation retains the appointment with status `CANCELLED`. A new booking needs a new appointment ID.
+- Conflict checks prevent two scheduled appointments for the same practitioner at the exact same time. They do not check patient clashes or appointment duration.
+- Notifications and saving to a file or database are outside scope.
