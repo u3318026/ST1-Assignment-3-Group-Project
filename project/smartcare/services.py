@@ -10,6 +10,7 @@ from smartcare.domain import (
     AppointmentStatus,
     Patient,
     Practitioner,
+    validate_date_time,
 )
 
 
@@ -157,6 +158,36 @@ class AppointmentService:
 
         appointment = self.find_appointment(appointment_id)
         appointment.cancel()
+        return appointment
+
+    def reschedule_appointment(
+        self,
+        appointment_id: str,
+        new_date_time: datetime,
+    ) -> Appointment:
+        """Move a scheduled appointment to a new time and return it.
+
+        Raise ValueError for invalid input, a conflict or an illegal
+        transition; raise LookupError when the appointment is absent.
+        """
+        if not isinstance(appointment_id, str) or not appointment_id.strip():
+            raise ValueError('Appointment ID cannot be blank')
+
+        appointment = self.data_store.find_appointment(appointment_id)
+        if appointment is None:
+            raise LookupError('Appointment not found')
+
+        new_date_time = validate_date_time(new_date_time)
+        if self.data_store.has_practitioner_conflict(
+            appointment.practitioner.practitioner_id,
+            new_date_time,
+            exclude_appointment_id=appointment.appointment_id,
+        ):
+            raise ValueError(
+                'Practitioner already has a SCHEDULED appointment at this time',
+            )
+
+        appointment.reschedule(new_date_time=new_date_time)
         return appointment
 
     def list_practitioner_appointments(self, practitioner_id: str, status: AppointmentStatus | None = None) -> list[Appointment]:
