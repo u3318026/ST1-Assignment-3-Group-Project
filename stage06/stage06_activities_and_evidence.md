@@ -92,8 +92,8 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Feature branch: Debug/stage8
 - Changed behaviour: Completed work for stage 8
 - Meaningful commits: Fix F8-01 and update Stage 8 record, commit for f8-01, required commit for f8-02, all test passed sha for D F8-02 diagnosis and repair, refactor sha, Ready for integration (probably)
-- Test command, directory and observed result: 
-- Another-member reviewer: Ryan Greives and Tamas Szucs
+- Test command, directory and observed result: All passing
+- Another-member reviewer: Tamas Szucs
 - Human observations recorded before Copilot: 7/11/2026 12:27pm 
 - Requirement, responsibilities, test assertions and unrelated-scope checks: Reversed practitioner comparison in has_practitioner_conflict, Practitioner identity mismatch elsewhere in the model (Possible but less likely), find_appointment() intentionally excludes CANCELLED appointments (Most likely), Service-layer lookup logic incorrectly treats "not found" and "cancelled" as the same thing (Possible but secondary), 
 - Key feedback: Make sure to meet each of those requirements in testing
@@ -104,6 +104,42 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Linked issue closure: Stage 8 Completion
 - Each member updated main: Ryan Greives
 - Integrated verification after merge: sha = 82beacf55cf879ab02fc6ae8d2d49be1941724e6
+
+- PR link and title: Feature/stage9 queries
+- Linked issue and requirement: Completion of stage 9
+- Feature branch: Feature/stage9 queries
+- Changed behaviour: Completing stage 9 work
+- Meaningful commits: Ready for new stage 9 branch, Stage 9 Human design, Implement list_practitioner_appointments, Added queries and Test_queries, Added workflow tests, Added Console, Added console workflow tests and scripted runs, Added test_already_sorted_input_gives_a_new_list, Ready for Copilot review, Ready for integration
+- Test command, directory and observed result: All tests passing
+- Another-member reviewer: Tamas Szucs
+- Human observations recorded before Copilot: All passing 
+- Requirement, responsibilities, test assertions and unrelated-scope checks:  test_queries, test_workflows
+- Key feedback: Make sure all tests are passing, code comments
+- Author response/change and verification: Completed
+- Reviewer recheck and approval: Completed
+- Merge outcome and SHA: Completed with no issues, sha = e2c06c9af1db61c23eae430a0678c5a5fd5dacb5
+- Significant Copilot assistance: None
+- Linked issue closure: Stage 9 completed
+- Each member updated main: Ryan Greives
+- Integrated verification after merge: sha = e2c06c9af1db61c23eae430a0678c5a5fd5dacb5
+
+- PR link and title: Stage 10 appointment rescheduling
+- Linked issue and requirement: Appointments are currently unreschedulable, we need to make it so that they can be
+- Feature branch: feature/stage10-rescheduling
+- Changed behaviour: added a rescheduling mechanism
+- Meaningful commits: Add Stage 10 appointment rescheduling
+- Test command, directory and observed result: All tests passing
+- Another-member reviewer: Ryan Greives and Tamas Szucs
+- Human observations recorded before Copilot: Code comments
+- Requirement, responsibilities, test assertions and unrelated-scope checks: Everything passing
+- Key feedback: code comments
+- Author response/change and verification: Completed
+- Reviewer recheck and approval: Completed
+- Merge outcome and SHA: Completed with no issues, sha = fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc
+- Significant Copilot assistance: None
+- Linked issue closure: Reschduling added 
+- Each member updated main: Md Tahmid Ul Islam Tonmoy
+- Integrated verification after merge: sha = fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc
 
 ## H Copilot collaboration record
 
