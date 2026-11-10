@@ -10,7 +10,7 @@ Group/tutorial: Group 6 / Wednesday 2.30 pm - 4.30 pm
 
 Assessed PG members and roles: Md Tahmid Ul Islam Tonmoy — responsible for Stage 10 rescheduling, Stage 11 assurance and Stage 12 release preparation.
 
-Optional UG contributors: [response or none]
+Optional UG contributors: None
 
 ## A Access baseline and recovery
 
@@ -25,7 +25,7 @@ Optional UG contributors: [response or none]
 
 - Clean branch and preparer / recovery baseline: I created feature/stage10-rescheduling from the clean Stage 9 commit above.
 
-- Evidence-only later SHA if different / explanation: Pending commit on docs/stage10-evidence. The tested integration SHA is fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc; the separate evidence update does not change the tested code.
+- Evidence-only later SHA if different / explanation: Stage 10 code was tested at `fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc`. The evidence was updated separately in [PR #5](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/5), which changes only documentation.
 
 ## B Tutorial activities
 
@@ -368,7 +368,7 @@ Approved bounded scope / forbidden changes / verification plan: On feature/stage
 
 Human plan approver and approval before edits: I, Md Tahmid Ul Islam Tonmoy, reviewed the Copilot Ask mode plan for Issue #3, recorded above in Section D. I approved the plan before any implementation edits, subject to the approved file scope and verification plan. My approval requires validating the new appointment time before checking for conflicts, excluding the appointment being moved by its stored ID, and keeping all existing tests unchanged.
 
-Tool permissions and any expanded-scope requests / decision: Copilot’s planning response shows file reads and searches. It reported no file edits or terminal commands.” For Human plan approver, enter your name and actual approval only once you’ve reviewed the plan and agreed to the conditions.
+Tool permissions and any expanded-scope requests / decision: In Ask mode, Copilot read and searched the workspace to propose a plan. It did not edit files or run terminal commands. I then used Agent mode for the approved edits to the domain, service and new rescheduling test file.
 
 ## E Production diff review
 
@@ -436,7 +436,7 @@ Independent human checks and corrections: I reviewed the revised assertions sepa
 
 
 
-Failures / diagnosis / corrections and reruns / unresolved concerns: The review identified two production corrections and a weak list-order assertion, documented in Sections E and F. I inspected the revised files. The focused, common and full local suites all passed after the corrections. The integrated retest is pending until the changes are merged.
+Failures / diagnosis / corrections and reruns / unresolved concerns: The review identified two production corrections and a weak list-order assertion, documented in Sections E and F. I inspected the revised files. The focused, common and full local suites all passed after the corrections. The integrated retest passed: 97 tests in 0.12s at fbad1d2.
 
 ## H Decisions corrections and independent review
 
@@ -449,16 +449,21 @@ Final proposal decision: Accepted after modification
 
 Evidence supporting decision: I inspected the revised production diff and the new test file. Both methods now use new_date_time, a valid same-time request returns without changing the stored time, and the revised listing test checks that rescheduling actually changes the order. The focused, common and full local test suites passed.
 
-If rejected, how the required feature was subsequently completed and verified: [response or not applicable]
-Saved proposal and targeted recovery details if needed: [response or not applicable]
+If rejected, how the required feature was subsequently completed and verified: Not applicable. I accepted the proposal after the requested corrections and verified the revised work with tests.
+
+Saved proposal and targeted recovery details if needed: The original Copilot plan is recorded in Section D. The protected Stage 9 commit and recovery branch are recorded in Section A. No rollback was needed.
+
 Human explanation of every changed method and limitations: Appointment.reschedule() validates the new time and allows only scheduled appointments to move. A valid same-time request returns without changing the stored time. AppointmentService.reschedule_appointment() finds the stored appointment, validates the time before checking for practitioner conflicts, excludes the appointment’s own ID from that check, and delegates the change to the domain method. The same appointment object is returned. Rescheduling is available through the service during the current session only; the console and persistence behaviour are unchanged.
 
 Another PG / willing UG / tutor reviewer, actual PR/diff review and feedback: [PR #4 — Stage 10 rescheduling](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/4). Collaborator `BlackJack2180` commented, “All the tests ran.” `u3318026` then merged the PR into `main` at commit `fbad1d2`. No formal approval is visible in the PR timeline.
 
 Corrections, recheck and actual approval before integration: I requested three corrections: use new_date_time in both method signatures, make a same-time request an explicit no-op, and strengthen the listing test so it detects a change in order. I inspected the revised production and test files and accepted the proposal after modification. The local runs passed with 16 focused, 81 common and 97 full tests. On PR #4, collaborator BlackJack2180 commented, “All the tests ran.” u3318026 then merged the PR. No formal reviewer approval is visible in the timeline. The integrated retest passed all 97 tests at fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc.
-Integrated PG SHA / common protected SHA: fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc
-Each assessed PG member's implementation, supervision and test contribution: [response and links]
-Optional UG help, acknowledged separately: [response or none]
+
+Integrated PG SHA / common protected SHA: `fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc`. Protected Stage 9 common commit: `ad62e75f16a38e6ba2e7099391edfe526dff2872`.
+
+Each assessed PG member's implementation, supervision and test contribution: Md Tahmid Ul Islam Tonmoy — defined the rescheduling scope, approved the Copilot plan, reviewed the implementation and tests, requested corrections, and ran the focused, common, full and integrated test suites. See [PR #4](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/4) and Section G.
+
+Optional UG help, acknowledged separately: None
 
 ## I Four reflections
 
@@ -483,20 +488,20 @@ Optional UG help, acknowledged separately: [response or none]
 
 ## K Completion and Stage 11 handover
 
-- [ ] Common Stage 9 checkpoint protected; UG pathway unaffected.
-- [ ] RES-01–06 and RES-05-R2 implemented in the same project.
-- [ ] Domain/service boundaries, current exceptions and coding standard preserved.
-- [ ] Positive/negative/boundary cases and failed-state checks verified.
-- [ ] Common tests remain valid and independently passing; full suite passes.
-- [ ] Plan reviewed before bounded actions; every file and test diff inspected.
-- [ ] Actual agent route, decisions, corrections and rechecks recorded honestly.
-- [ ] No unrelated features, persistence, dependencies or staff solutions introduced.
+- [x] Common Stage 9 checkpoint protected; UG pathway unaffected.
+- [x] RES-01–06 and RES-05-R2 implemented in the same project.
+- [x] Domain/service boundaries, current exceptions and coding standard preserved.
+- [x] Positive/negative/boundary cases and failed-state checks verified.
+- [x] Common tests remain valid and independently passing; full suite passes.
+- [x] Plan reviewed before bounded actions; every file and test diff inspected.
+- [x] Actual agent route, decisions, corrections and rechecks recorded honestly.
+- [x] No unrelated features, persistence, dependencies or staff solutions introduced.
 - [ ] Another-member or tutor review and integrated retest complete.
-- [ ] Tutorial, four reflections, ten formative responses and PG contributions complete.
-- [ ] Each PG member can explain their code and supervision.
-- [ ] README PG note, actual integrated SHA and limitations recorded.
+- [x] Tutorial, four reflections, ten formative responses and PG contributions complete.
+- [x] Each PG member can explain their code and supervision.
+- [x] README PG note, actual integrated SHA and limitations recorded.
 
 Unresolved issues / owner / action: No implementation or test failures remain from the Stage 10 integrated retest. The PR records a collaborator’s test comment and the merge, but no formal approval is visible. Owner: Md Tahmid Ul Islam Tonmoy. If separate review evidence is required, obtain and link the reviewer’s actual feedback in Section H.
 Stage 11 handover references to extension, tests, dependencies and actual AI/review evidence: Stage 11 starts from the integrated Stage 10 work in PR #4. Rescheduling is implemented in project/smartcare/domain.py and project/smartcare/services.py, with focused tests in project/tests/test_rescheduling.py and usage documented in project/README.md. No dependency changes were introduced. Section D records the Copilot plan and scope approval, Sections E–F record the code and test reviews, Section G records the test runs, and Section H records the review and integration evidence.
-Submitted SHA / explanation if later than tested code: Integrated code tested: fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc — 97 passed in 0.12s. Submitted evidence SHA is pending. The evidence update is being prepared separately on docs/stage10-evidence.
+Submitted SHA / explanation if later than tested code: Integrated code tested at `fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc` — 97 tests passed in 0.12s. The separate documentation update is recorded in [PR #5](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/5).
 Stage 11 materials are supplied from the beginning. Begin Stage 11 only after Stage 10 has been integrated, verified and recorded. UG follows the protected common code from Stage 9 to Stage 12.
