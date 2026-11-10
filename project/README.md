@@ -11,11 +11,11 @@ The Stage 12 PG starting snapshot was verified on macOS using Python 3.12.10 and
 ```sh
 cd project
 python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-dev.txt
-python main.py
-python main.py --interactive
-python -m pytest -q
+.venv/bin/python --version
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python main.py
+.venv/bin/python main.py --interactive
+.venv/bin/python -m pytest -q
 ```
 
 `python main.py` runs a synthetic demo. Use `--interactive` to open the menu and select `0` to exit. Pytest is a development dependency. Use synthetic information only.

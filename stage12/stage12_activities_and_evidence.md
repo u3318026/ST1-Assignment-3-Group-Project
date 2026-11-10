@@ -57,6 +57,8 @@ Tutorial activity 2 and actual readiness matrix:
 | Affected focused checks after correction | Not applicable at this point | No correction was needed after these runs. | — | Not run | — |
 | Full integrated recheck | Pending | Rerun the full suite from a fresh copy of the final release candidate. | Pending final release SHA | Not yet run | Record the result after the final recheck. |
 
+Pre-integration candidate recheck: At `ed5000f91e80f9ff328e23873eb2a3a97d88b5cb`, I ran `.venv/bin/python -m pytest -q` from `smartcare-stage12-candidate/project/`. Result: 100 passed in 0.16s.
+
 Prior assertions preserved / reviewed test diff: Stage 11 recorded that its assurance tests were added in a separate file without replacing earlier assertions. Both Stage 12 suites passed on the commits listed above. See the [Stage 11 evidence](../stage11_pg/stage11_activities_and_evidence.md).
 
 Remaining failure / limitation: No failures were observed in either regression run. The documented console limitation still applies: patient lookup displays the patient ID and name twice. The console demonstration is complete and recorded in Section D
@@ -134,7 +136,7 @@ Verifier and clean environment / actual version: Md Tahmid Ul Islam Tonmoy. macO
 
 Setup/run/test commands and observed results: From `smartcare-stage12-fresh/project/`, created a virtual environment with `python3.12 -m venv` and used its Python to run `-m pip install -r requirements-dev.txt`, `main.py`, `main.py --interactive`, and `-m pytest -q`. Installation succeeded, the synthetic demo ran, and the interactive console opened and exited normally using option `0`. Result: 100 passed in 0.16s.
 
-Missing local file or setup gap / remedy and recheck: No required local file was missing during the run. Added explicit virtual environment setup instructions to the project README and navigation links to the root README. Recheck the updated instructions against the final release candidate.
+No required file was missing. In the fresh candidate worktree, running python after activation selected Python 3.9.6, and the demo failed on the Patient | None annotation before tests ran. Calling .venv/bin/python directly selected Python 3.12.10. Dependency installation succeeded, both launch modes worked, and 100 tests passed in 0.16s at ed5000f91e80f9ff328e23873eb2a3a97d88b5cb. The README now uses the explicit interpreter path.
 
 ## G Known limitations debt and release notes
 
@@ -170,7 +172,7 @@ PG assurance residual risks / owner / status or not applicable: Md Tahmid Ul Isl
 | Requirement/claim | Reproduction/observation | Impact/severity | Owner/action | Corrective diff | Focused/full recheck | Residual limit |
 |---|---|---|---|---|---|---|
 | A new user can find the project and release evidence. | The original root README listed the group members but did not link to setup instructions or stage evidence. | Documentation gap; makes handover harder. | Md Tahmid Ul Islam Tonmoy added a project summary and navigation links. | [Root README](../README.md), updated on `release/stage12`. | Final checkout: verify that the links open the intended files. Pending. | Final release SHA is not yet recorded. |
-| A new user can set up and run SmartCare from a fresh copy. | The original project README listed run commands but assumed a Python environment was already configured. A fresh worktree and new environment successfully ran both launch modes and passed 100 tests. | Documentation gap; a new user could miss the environment setup step. | Md Tahmid Ul Islam Tonmoy added virtual environment setup, verified environment versions and scope notes. | [Project README](../project/README.md), updated on `release/stage12`. | Starting snapshot: 100 passed in 0.16s. Recheck the revised README commands from the final checkout. Pending. | The observed environment was macOS with Python 3.12.10 and pytest 8.3.5. |
+| A new user can set up and run SmartCare from a fresh copy. | After activation, `python` selected Python 3.9.6 instead of the virtual environment’s Python 3.12.10. The demo failed before the tests ran. | Setup instructions could lead a new user to run the wrong Python version. | Md Tahmid Ul Islam Tonmoy updated the setup commands to call `.venv/bin/python` directly. | [Project README](../project/README.md), Run SmartCare. | Using `.venv/bin/python` at `ed5000f91e80f9ff328e23873eb2a3a97d88b5cb`, dependency installation succeeded, both launch modes worked, and 100 tests passed in 0.16s. | The commands were verified on macOS. The final integrated recheck is pending. |
 | Console patient lookup displays the patient record. | Finding `P001` displayed the patient ID and name in both the result message and the details block. | Low impact in the synthetic demo; a data-minimisation concern for real records. | Md Tahmid Ul Islam Tonmoy documented the duplication. No code change was made. | [Project README](../project/README.md), Limitations. | Reproduced in the Section D console demo. Stage 11 service tests do not cover this display behaviour. | Duplicate output remains. Use synthetic records only. |
 
 Justified no-change conclusion if no defect found: No required code behaviour failed in the checks performed. The protected common suite passed 81 tests, the PG starting suite passed 100 tests, and the console demonstration showed the expected scheduling, listing and error recovery behaviour. The findings were addressed through documentation; no application or test code was changed in Stage 12 so far.
@@ -212,12 +214,17 @@ Common decision / PG decision where different: The protected common snapshot pas
 
 ## K Final tested release SHA
 
-Exact common tested SHA: [response]
-Exact PG tested SHA or not applicable: [response]
-Final submitted SHA / repository URL: [response]
-Evidence-only later commit and difference explanation: [response]
-Executable changes after testing and re-verification: [response]
-Source ZIP name / SHA correspondence / extracted comparison: [response]
+Exact common tested SHA: `ad62e75f16a38e6ba2e7099391edfe526dff2872` — protected common suite: 81 passed in 0.07s.
+
+Exact PG tested SHA or not applicable: `ed5000f91e80f9ff328e23873eb2a3a97d88b5cb` — tested in a fresh detached worktree with Python 3.12.10 and pytest 8.3.5. Both launch modes worked and the full suite passed 100 tests in 0.16s.
+
+Final submitted SHA / repository URL: Pending integration and release sign-off. Repository: https://github.com/u3318026/ST1-Assignment-3-Group-Project
+
+Evidence-only later commit and difference explanation: The follow-up updates the README to call the virtual environment interpreter explicitly and records the observed results. Its commit SHA and diff comparison are pending.
+
+Executable changes after testing and re-verification: No executable or test changes are planned in the follow-up. Confirm this in the diff and record the integrated recheck before submission.
+
+Source ZIP name / SHA correspondence / extracted comparison: Pending final submitted SHA. Create the ZIP from that commit and verify the extracted contents against it.
 
 
 ## L Submission package verification
