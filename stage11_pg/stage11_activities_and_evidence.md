@@ -20,7 +20,7 @@ Selected PG feature and common workflow / requirements / code locations: PG feat
 
 Actual available earlier AI, issue, PR and dependency evidence: Stage 10 Copilot-assisted work is recorded in [Issue #3](https://github.com/u3318026/ST1-Assignment-3-Group-Project/issues/3), [implementation PR #4](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/4), and [evidence PR #5](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/5). The dependency declaration and installed pytest metadata were checked in Section H.
 
-Missing evidence / honest limitation: The exact Copilot model and extension version were not recorded. The available Stage 10 records do not establish the AI provenance of every earlier contribution. Stage 11 independent review and the integrated retest are pending.
+Missing evidence / honest limitation: The exact Copilot model and extension version were not recorded. The available Stage 10 records do not establish the AI provenance of every earlier contribution. Independent reviewer: pending confirmation. to Independent reviewer: u3318026; approval recorded in PR #6.
 
 Assets and trust boundaries: The assets in scope are patient identifiers and names, appointment times and statuses, and the integrity of the repository and its tests. The console passes user input to the service, which validates it and uses the shared store. Copilot inspected repository code and tests; editing was limited to one new test file using synthetic data.
 
@@ -124,7 +124,7 @@ For each of at least TWO new/materially strengthened tests, explain the earlier 
 | Previous PG independently | From `project/`: `../.venv/bin/python -m pytest -q tests/test_rescheduling.py` | Same pre-commit working tree | 16 passed in 0.01s | Local terminal output |
 | Common independently | From `project/`: `../.venv/bin/python -m pytest -q --ignore=tests/test_assurance.py --ignore=tests/test_rescheduling.py` | Same pre-commit working tree | 81 passed in 0.03s | Local terminal output |
 | Full PG cumulative | From `project/`: `../.venv/bin/python -m pytest -q` | `410250721c41dda0f28c4129a2e7cc177d189141` | 100 passed in 0.08s | Local terminal output immediately after the Stage 11 test commit |
-| Integrated retest | Pending integration | Pending | Not yet run | Record after testing the integrated commit |
+| Integrated retest | From `smartcare-stage11-retest/project/`: `../../st1-assignment-3/.venv/bin/python -m pytest -q` | `94c7f244cf3dd1e995287966516bbb5bc2e7b792` | 100 passed in 0.13s | Local terminal output; [PR #6](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/6) |
 
 Confirmed defect / minimal correction / before-after evidence, or justified no-change decision: No production defect was found in the cases tested. Same-time requests for cancelled and completed appointments raised ValueError and left the stored time and status unchanged. A whitespace-only patient ID also raised ValueError. Two test functions were added to cover these gaps; no production code change was needed.
 Preserved earlier assertions / inspected test diff: I compared the new `project/tests/test_assurance.py` with the reviewed proposal and confirmed that no existing project files changed. The original Stage 10 suite passed all 16 cases, and the common suite passed all 81 cases independently.
@@ -141,7 +141,7 @@ Unresolved failures, action and owner: No test failures remain from the local ru
 | Run meaningful tests | The new assurance suite passed 3 cases. The Stage 10 suite passed 16, and the common suite passed 81. The full suite passed 100 at commit `4102507`. | The new tests cover gaps without replacing earlier assertions. See Section D for commands and results. |
 | Inspect risks and assumptions | The same-time shortcut could bypass the status check if reordered. Whitespace-only IDs could be mistaken for valid but unknown IDs. | Added regression checks for both risks. The findings apply to the service calls tested; console behaviour was not tested by these new cases. |
 | Fit architecture and policy | The new file uses existing SmartCare services, the shared store, pytest and synthetic records. The Git scope check showed no changes to existing project files. | No production code or dependency changes were needed. |
-| You remain responsible | I checked the Copilot proposal against the saved test file and ran the suites locally. | I accepted the test changes based on the code and test output. Independent review and the integrated retest are still pending. |
+| You remain responsible | I checked the Copilot proposal against the saved test file and ran the suites locally. | I accepted the test changes based on my code review and local test results. PR #6 received independent approval. After the merge, the full suite passed 100 tests in 0.13s at `94c7f24`. |
 
 ## F TRUST assessment
 
@@ -149,10 +149,10 @@ Unresolved failures, action and owner: No test failures remain from the local ru
 | TRUST element | Evidence | Status/action |
 |---|---|---|
 | Trace | Copilot proposed the tests in Ask mode and created the approved file in Agent mode. The test changes are recorded in commit `410250721c41dda0f28c4129a2e7cc177d189141`. | The proposal, approved scope and resulting change can be traced. See Section G for the Copilot audit. |
-| Review | I compared the saved test file with the reviewed proposal and checked Git status. Only the new test file was added under `project/`. | Local scope review complete; independent review is pending. |
+| Review | I compared the saved test file with the reviewed proposal and checked Git status. Only the new test file was added under `project/`. | Local scope review complete. Independent approval is recorded in PR #6. |
 | Understand | The rescheduling test checks that a same-time request cannot bypass the status check. The lookup test checks that an invalid ID is rejected as invalid input. | Both tests target specific gaps in earlier coverage. |
 | Secure | The tests use synthetic records and the existing local test setup. The change introduces no new dependency or production logging. | No real patient data or credentials were needed for these tests. |
-| Test | The assurance suite passed 3 cases, the previous PG suite passed 16, and the common suite passed 81. The full suite passed 100 tests at commit `4102507`. | Local verification complete. The integrated retest is pending. |
+| Test | The assurance suite passed 3 cases, the previous PG suite passed 16, and the common suite passed 81. The full suite passed 100 tests at commit `4102507`. | Integrated retest complete: 100 tests passed in 0.13s at merge commit 94c7f24. |
 
 ## G GitHub Copilot audit
 
@@ -203,23 +203,23 @@ Policy questions or unresolved provenance / responsible contact: No production c
 
 ## I Independent review and final audit statement
 
-Human reviewer / PR or diff link / feedback: Pending. Stage 11 test commit available for review: `410250721c41dda0f28c4129a2e7cc177d189141`.
+Human reviewer / PR or diff link / feedback: u3318026 approved PR #6. The recorded reviews accepted the test assertions and the evidence responses.
 
-Corrections and recheck / approval before integration: No production correction was needed in the cases tested. Independent review and approval are pending.
+Corrections and recheck / approval before integration: No production correction was needed for the cases tested. PR #6 was approved before merging. After the merge, the full suite passed 100 tests in 0.13s.
 
-Overall decision: Not yet acceptable for integration. Local verification passed; independent review and approval are still required. The integrated version will be retested after merge.
+Overall decision: Stage 11 assurance changes were accepted after independent review. The integrated retest passed. The documented limitations remain.
 
 Unresolved risks: The existing patient lookup console displays the patient ID and name twice. This is a data-minimisation concern if real records are used; see Section H.
 
 Evidence supporting decision: The full suite passed 100 tests at `410250721c41dda0f28c4129a2e7cc177d189141`. Separate local runs passed 3 assurance, 16 Stage 10 and 81 common cases. Commands and results are recorded in Section D.
 
-Remediation owner / action / status: Md Tahmid Ul Islam Tonmoy — obtain independent review, address any feedback and record the integrated retest. Pending.
+Remediation owner / action / status: Md Tahmid Ul Islam Tonmoy — independent review and integrated retest complete. The console output limitation remains documented in Section H.
 
 Residual limitations and conditions of acceptance: The new tests verify service behaviour. They do not verify console accessibility or privacy with real patient records.
 
-Accountable reviewer and PG member sign-off: PG owner: Md Tahmid Ul Islam Tonmoy. Independent reviewer and final sign-off: pending.
+Accountable reviewer and PG member sign-off: PG owner: Md Tahmid Ul Islam Tonmoy. Independent reviewer: u3318026; approval recorded in PR #6. Keep any separate sign-off marked pending unless it actually occurred.
 
-Integrated PG SHA / protected common SHA: Stage 11 integrated SHA: pending. Protected Stage 9 common SHA: `ad62e75f16a38e6ba2e7099391edfe526dff2872`.
+Integrated PG SHA / protected common SHA: Stage 11 integrated SHA: 94c7f244cf3dd1e995287966516bbb5bc2e7b792. Protected Stage 9 common SHA: ad62e75f16a38e6ba2e7099391edfe526dff2872.
 
 ## J Reflections
 
@@ -227,7 +227,7 @@ Integrated PG SHA / protected common SHA: Stage 11 integrated SHA: pending. Prot
 
 2. Which AI audit finding was false or overstated? If none, state honestly and explain verification. I did not identify a false claim in the Copilot plan I reviewed. I checked the existing tests and confirmed that they did not cover same-time requests for cancelled or completed appointments or a whitespace-only patient ID at the service layer. I changed where the tests were added so the earlier suites remained intact.
 
-3. What evidence supports your final trust decision? I checked the saved test file against the approved scope and confirmed that no existing project files changed. The three new assurance cases, 16 Stage 10 cases and 81 common cases passed in separate runs. The full suite passed 100 tests at commit `4102507`. This supports accepting the local test changes for review. Final acceptance is pending independent review and an integrated retest.
+3. What evidence supports your final trust decision? I checked the saved test file against the approved scope and confirmed that no existing project files changed. The three new assurance cases, 16 Stage 10 cases and 81 common cases passed in separate runs. The full suite passed 100 tests at commit `4102507`. These local results supported sending the changes for review. PR #6 received independent approval before merging. After the merge, I reran the full suite at commit 94c7f24; all 100 tests passed in 0.13s. Together, the review and the retest support accepting the Stage 11 changes.
 
 ## K Ten formative questions
 
@@ -253,7 +253,6 @@ Integrated PG SHA / protected common SHA: Stage 11 integrated SHA: pending. Prot
 
 ## L Completion and Stage 12 handover
 
-
 - [x] Actual SmartCare scope and human-first observations recorded.
 - [x] All tutorial activities and every VERIFY/TRUST element complete.
 - [x] At least two meaningful assurance tests with added-value explanations.
@@ -261,15 +260,17 @@ Integrated PG SHA / protected common SHA: Stage 11 integrated SHA: pending. Prot
 - [x] Earlier assertions preserved; common and PG suites independently checked.
 - [x] Copilot claims independently verified and actual decisions recorded honestly.
 - [x] Dependency/provenance/privacy review and residual limits complete.
-- [ ] Independent human review, integration and retest recorded.
+- [x] Independent human review, integration and retest recorded.
 - [x] All three reflections and ten formative questions answered.
 - [ ] Accountable PG contribution/sign-off and protected UG pathway retained.
 
-Unresolved issues / owner / handover action: Md Tahmid Ul Islam Tonmoy will request independent review of the Stage 11 changes, address any feedback, and record the integrated commit and retest after merge. The existing console displays the patient ID and name twice; see Section H for the limitation.
+Unresolved issues / owner / handover action: Md Tahmid Ul Islam Tonmoy recorded the independent approval in [PR #6](https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/6) and verified the merged code. The console still displays the patient ID and name twice; see Section H for this limitation.
 
-Tested code SHA / command / working directory / observed result: `410250721c41dda0f28c4129a2e7cc177d189141` — ran `../.venv/bin/python -m pytest -q` from `project/`. Result: 100 passed in 0.08s.
+Tested code SHA / command / working directory / observed result:
+- Before merge: `410250721c41dda0f28c4129a2e7cc177d189141` — ran `../.venv/bin/python -m pytest -q` from `project/`. Result: 100 passed in 0.08s.
+- After merge: `94c7f244cf3dd1e995287966516bbb5bc2e7b792` — ran `../../st1-assignment-3/.venv/bin/python -m pytest -q` from `smartcare-stage11-retest/project/`. Result: 100 passed in 0.13s.
 
-Final submitted SHA / later evidence-only change explanation: Pending. The tested SHA above identifies the assurance test commit. Record the final submitted SHA after integration and identify any later documentation-only updates.
+Final submitted SHA / later evidence-only change explanation: Pending final release selection. The integrated SHA above identifies the code tested after PR #6 was merged. This later update records the review and retest without changing the code or tests.
 
 Stage 12 handover links to same project/tests/assurance conclusion and limitations: [SmartCare project](../project/README.md), [Stage 11 assurance tests](../project/tests/test_assurance.py), and [Stage 10 rescheduling tests](../project/tests/test_rescheduling.py). Section D records the findings and test results; Section H records the privacy and provenance limitations. The tested cases required no production code fix.
 
