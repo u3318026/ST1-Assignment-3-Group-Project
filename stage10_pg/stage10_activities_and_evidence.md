@@ -496,7 +496,7 @@ Optional UG help, acknowledged separately: None
 - [x] Plan reviewed before bounded actions; every file and test diff inspected.
 - [x] Actual agent route, decisions, corrections and rechecks recorded honestly.
 - [x] No unrelated features, persistence, dependencies or staff solutions introduced.
-- [ ] Another-member or tutor review and integrated retest complete.
+- [x] Another-member or tutor review and integrated retest complete.
 - [x] Tutorial, four reflections, ten formative responses and PG contributions complete.
 - [x] Each PG member can explain their code and supervision.
 - [x] README PG note, actual integrated SHA and limitations recorded.
