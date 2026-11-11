@@ -23,11 +23,11 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
 
 ### FR-06 Appointment Cancellation with FR-07 retained history
 
-- Title: Cancelling an appointment marks it as cancelled but is stil added to the patients history
+- Title: Cancelling an appointment marks it as cancelled but is still added to the patients history
 - Context: When an appointment is cancelled, it should still be added to the patients history because it is important information to know for the practitioner.
 - Requirement: FR-06: A appointment can be cancelled, FR-07: A cancelled appointment is still connected with patient history.
 - Acceptance criteria: Status of a booking should be changed when cancelled, Cancelled appointment is added to patient history, Once cancelled you cant cancel again, Cancelling one appointment shouldn't cancel another one of the patients appointments.
-- Scope: In scope: meet all requiremtns, Passes all tests, Looking through poatient history must show all cancellations. Out of scope: refunds and other money handling is done seperately, notifications of cancellation, rescheduling, Asking for cancellation reason.
+- Scope: In scope: meet all requirments, Passes all tests, Looking through paitient history must show all cancellations. Out of scope: refunds and other money handling is done seperately, notifications of cancellation, rescheduling, Asking for cancellation reason.
 - Definition of Done: meets all requirements, stays within the scope of the task.
 - Owner: Tamas Szucs
 - Actual issue link: [services.py] Line 151-159
@@ -102,7 +102,7 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Merge outcome and SHA: Completed with no issues, sha = 82beacf55cf879ab02fc6ae8d2d49be1941724e6
 - Significant Copilot assistance: None
 - Linked issue closure: Stage 8 Completion
-- Each member updated main: Ryan Greives
+- Each member updated main: Ryan Grieves
 - Integrated verification after merge: sha = 82beacf55cf879ab02fc6ae8d2d49be1941724e6
 
 - PR link and title: Feature/stage9 queries
@@ -120,7 +120,7 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Merge outcome and SHA: Completed with no issues, sha = e2c06c9af1db61c23eae430a0678c5a5fd5dacb5
 - Significant Copilot assistance: None
 - Linked issue closure: Stage 9 completed
-- Each member updated main: Ryan Greives
+- Each member updated main: Ryan Grieves
 - Integrated verification after merge: sha = e2c06c9af1db61c23eae430a0678c5a5fd5dacb5
 
 - PR link and title: Stage 10 appointment rescheduling
@@ -215,8 +215,8 @@ Record meaningful required use, not every trivial completion. Repeat per signifi
 - What did the human reviewer notice that Copilot did not: the practitioner id was being stored elswhere in the code away from the immediate function being tested.
 - What did Copilot identify that the human reviewer initially missed: Reversed practitioner comparison in has_practitioner_conflict, We didn't realise this since weren't looking for whether the reversed roles would work, we were just looking for whether the original method would work, if we reverse we should see the same output if it wasnt but since we diddnt realise and copilot did, this is something it noticed that we didnt.
 - Unsupported or incorrect Copilot suggestion: None found, since copilot was working off of the requirements built around the requirements of this assessment, it wasnt hallucinating or making judgements outside of the indicated scope.
-- Human judgement accepted, modified or rejected, and why: Accepted, because it was meaningful towards our teams success
-- Which evidence justified merge approval: Human Evidence justified the merge approval since majority of the reveiw and the everything of the work was human.
+- Human judgment accepted, modified or rejected, and why: Accepted, because it was meaningful towards our teams success
+- Which evidence justified merge approval: Human Evidence justified the merge approval since majority of the review and the everything of the work was human.
 
 ## J Contributions
 
@@ -231,14 +231,14 @@ Repeat per member. Include only categories that describe actual work; write not 
 - Debugging or integration: Was leading part 6-7, had many debuggings during the process of testing, fixed all of those to make sure that its working.
 - Documentation or team support: Github reviews and commits.
 
-- Member: Ryan Greives
-- Implementation: [work and evidence]
-- Testing: [work and evidence]
-- Review: [work and evidence]
-- Issue refinement: [work and evidence]
-- Design and responsibility discussion: [work and evidence]
-- Debugging or integration: [work and evidence]
-- Documentation or team support: [work and evidence]
+- Member: Ryan Grieves
+- Implementation: Stages 8-9
+- Testing: All tests passed. ![img.png](../stage08/img.png) and ![img.png](../stage09/img.png)
+- Review: Work on stage 8 debug and stage 9 queries branches. Reviewed by Tamas Szucs.
+- Issue refinement: Test workflows and Tests queries as well as a few extra tests. [test_queries.py](../project/tests/test_queries.py) [test_workflows.py](../project/tests/test_workflows.py)
+- Design and responsibility discussion: Was lead for part 8 and 9. Ran tests for all stages to make usre they all pass.
+- Debugging or integration: Was leading part 8 and 9. A few bugs came up such as accidentally writing 'appointments' instead of 'appointment'. All bugs were fixed by the merges of both part 8 and 9.
+- Documentation or team support: GitHub reviews and commits.
 
 
 - Member: Md Tahmid Ul Islam Tonmoy
@@ -261,11 +261,11 @@ Answer: A high commit count doesnt give evidence of strong contribution because 
 
 1. What is version control?
 
-Version control is a way of tracking and controlling differnt changes to a document or file over time.
+Version control is a way of tracking and controlling different changes to a document or file over time.
 
 2. Why is a feature branch useful?
 
-It is useful because we can beuild specific things outside of the main branch, which means that we can do more testingt and enhancing without the fear of braking saomething on the main file.
+It is useful because we can rebuild specific things outside of the main branch, which means that we can do more testingt and enhancing without the fear of braking saomething on the main file.
 
 3. What makes a commit a good engineering commit?
 
@@ -277,7 +277,7 @@ A pull request is when you divert from the main branch and work on that, and the
 
 5. What is the purpose of code review?
 
-The prupose is to make sure that the proposed work is useful and the work doesnt interfere or break existing code. Reviewing the code before it is merged back to main makes sure that the existing code on the main and the new code isn't going to break the system.
+The purpose is to make sure that the proposed work is useful and the work doesnt interfere or break existing code. Reviewing the code before it is merged back to main makes sure that the existing code on the main and the new code isn't going to break the system.
 
 6. What does a Git diff show?
 
@@ -289,7 +289,7 @@ The definition of done is meeting the given criteria. This can be based off of q
 
 8. What is the appropriate role of GitHub Copilot in pull-request review?
 
-The approprioate use of github copilot in the pull request review is to use it as a tool for automated review, it shouldnt mean that it is the only one to review it, but it can be the first to review since it can be automated to check it as soon as you do the pull reuqest. It shouldnt be used for comprehensive and deep analysis, but a quick general overview of work and feedback.
+The approprioate use of GitHub Copilot in the pull request review is to use it as a tool for automated review, it shouldnt mean that it is the only one to review it, but it can be the first to review since it can be automated to check it as soon as you do the pull reuqest. It shouldnt be used for comprehensive and deep analysis, but a quick general overview of work and feedback.
 
 9. Why should individual contribution not be judged only by commit count?
 

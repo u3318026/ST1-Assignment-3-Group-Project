@@ -412,7 +412,7 @@ Final human conclusion and comparison with initial hypothesis: My hypothesis was
 | F8-01 after repair | a8368ea | `python -m pytest -q`, project/ | 6 failed, 44 passed. Both F8-01 regression tests pass; all 6 remaining failures are F8-02 (2 in test_regressions.py, 4 in test_services.py). |
 | F8-02 before repair | a8368ea | `python -m pytest -q`, project/ | Same run as above. test_f8_02_cancelled_appointment_is_still_found: AssertionError, assert None is <Appointment>. test_f8_02_repeated_cancellation_is_rejected_without_change: LookupError "Unknown appointment ID". |
 | F8-02 after repair | a11db4d | `python -m pytest -q`, project/ | 50 passed in 0.04s, including both F8-02 regression tests. |
-| Full suite after both repairs, before refactor | a11db4d | `python -m pytest -q`, project/ | 50 passed in 0.04s. |
+| Full suite after both repairs before refactor | a11db4d | `python -m pytest -q`, project/ | 50 passed in 0.04s. |
 
 Explain how the assertions detect each relevant incorrect result and protect previous behaviour: The F8-01 same-practitioner test uses pytest.raises(ValueError), so a double booking that is accepted fails with DID NOT RAISE. It also checks that the stored list is unchanged after the rejection, that A2 was not stored and that A1 is still the same object. The different-practitioner test asserts the second booking succeeds and is stored so a wrongly rejected booking fails. The F8-02 tests assert that cancel returns the same object with status CANCELLED that stores and services lookup return that same object afterwards, that it is still in list_appointments() and that a repeated cancel raises ValueError and leaves the status CANCELLED so a lookup that hides cancelled appointments fails. The earlier tests in test_services.py and test_starter.py were kept and also failed on the same two defects. Running the full suite after each repair shows earlier behaviour still passes.
 Unrelated failures investigated / resolution: None. The 7 failures in the first prepared run were all traced to F8-01 (3) or F8-02 (4), and the 6 left after the F8-01 repair were all F8-02.
@@ -431,14 +431,14 @@ Result — accepted, revised or rejected / reason / behaviour-preservation concl
 
 ## I. Git, human review and integration
 
-Issues for both defects / refactor scope and owners: [complete]
-Branch / prepared, repair and refactor checkpoints: [link B/C/D/H]
-PR link and another member's reviewer identity: [complete]
-Key human feedback, difference from Copilot findings and response/outcome: [complete]
-Actual review approval / merge evidence: [complete]
-Integrated code SHA and team pull/retest command / working directory / result: [complete]
-Evidence-only later SHA / explanation if different: [complete or not applicable]
-Each member's substantive contribution and artifact: [complete]
+Issues for both defects / refactor scope and owners: Both issues can be seen on the first commit for stage 8 = 7f9ffa0. Issue for the first defect was the practitioner ID comparison in SmartCareDataStore.has_practitioner_conflict was the wrong way around as it treats a different practitioner as a conflict. Issue for second defect is SmartCareDataStore.find_appointment skipped cancelled appointments so it returned None for an appointment that is stored but cancelled. Owner = Ryan Grieves.
+Branch / prepared, repair and refactor checkpoints: Branch: debug/stage8. Prepared state 7f9ffa0. F8-01 repair a8368ea. F8-02 repair a11db4d. Refactor 2d699a1.
+PR link and another member's reviewer identity: Tamas Szuc reviewed stage 8. Link to the pr = https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/1.
+Key human feedback, difference from Copilot findings and response/outcome: Tamas said "Nothing unsatisfactory, approved". This was the comment on the PR after copilot had done their review.
+Actual review approval / merge evidence: Tamas Szuc approved the merge and merged commit 82beacf into main on nov 7th, 2026, 12:33 
+Integrated code SHA and team pull/retest command / working directory / result: 82beacf55cf879ab02fc6ae8d2d49be1941724e6 after merging Tamas ran the tests and they all passed.
+Evidence-only later SHA / explanation if different: md file and code done at same time.
+Each member's substantive contribution and artifact: Ryan grieves: regression tests, both repairs, refactor, Copilot runs and sections A to L Tamas Szucs: Prepared the debug/stage8 branch with the Stage 8 utility (<commit 7f9ffa0>).
 
 ## J. Required reflections
 
@@ -497,11 +497,11 @@ Response: Diagnose before fixing.
 - [1] Supported causes and minimal repairs explained; focused and full regression results recorded.
 - [1] One genuine refactor verified under passing before/after tests.
 - [1] Human PR review, feedback resolution and integrated retest recorded.
-- [ ] Tutorial, three reflections and ten formative responses complete.
+- [1] Tutorial, three reflections and ten formative responses complete.
 - [ ] Local recovery metadata excluded from submitted source.
-- [ ] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
+- [1] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
 
 Verified integrated code SHA / result: 2d699a1
-Submitted SHA and evidence-only difference if any: [complete]
-Unresolved issues or incomplete checks / owner / next action: [complete]
-Handover note: [complete]
+Submitted SHA and evidence-only difference if any: None
+Unresolved issues or incomplete checks / owner / next action: None
+Handover note: All is working as expected.

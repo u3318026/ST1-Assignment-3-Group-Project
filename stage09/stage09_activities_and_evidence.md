@@ -154,7 +154,7 @@ PR/diff and another-member human reviewer: <!-- actual links/name -->
 Review responses and Copilot comparison: <!-- links -->
 Integrated common Stage 9 SHA: <!-- complete -->
 Full regression command, working directory, actual count/result and evidence: <!-- complete -->
-README run instructions and scope/limitations: <!-- link -->
+README run instructions and scope/limitations: [README.md](../project/README.md)
 Unresolved issues and support/action: <!-- complete -->
 UG common candidate / PG future branch plan: <!-- complete -->
 
