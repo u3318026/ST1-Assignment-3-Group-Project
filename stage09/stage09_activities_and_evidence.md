@@ -150,21 +150,21 @@ Responsibility check: explain how domain invariants, shared-store collections, s
 ## H. Review, completion and common handover
 
 Issues and bounded branches: <!-- links -->
-PR/diff and another-member human reviewer: <!-- actual links/name -->
-Review responses and Copilot comparison: <!-- links -->
-Integrated common Stage 9 SHA: <!-- complete -->
-Full regression command, working directory, actual count/result and evidence: <!-- complete -->
+PR/diff and another-member human reviewer: PR link = https://github.com/u3318026/ST1-Assignment-3-Group-Project/pull/2. Reviewed by Tamas Szucs who said "nothing unsatisfactory, potentially add code comments".
+Review responses and Copilot comparison: Reviewed by Tamas Szucs who said "nothing unsatisfactory, potentially add code comments". Review was done after Copilot gave their review and their suggestions were accepted or denied. Tamas found no errors but did recommend to potentially add code comments to increase readability. The code was merged as everything was correct in order to allow qork on stage 10 to commence.
+Integrated common Stage 9 SHA: ad62e75f16a38e6ba2e7099391edfe526dff2872
+Full regression command, working directory, actual count/result and evidence: `python -m pytest -q` was used and the output was 78 passed 0 failed. ![img.png](img.png)
 README run instructions and scope/limitations: [README.md](../project/README.md)
-Unresolved issues and support/action: <!-- complete -->
-UG common candidate / PG future branch plan: <!-- complete -->
+Unresolved issues and support/action: None. 
+UG common candidate / PG future branch plan: UG common candidate: the merged Stage 9 commit <SHA> on main. PG future branch plan: Tahmid starts Stage 10 on a separate branch from this commit after approval and doesn't change main's Stage 9 code.
 
-- [ ] Query contracts, purity, new lists and named-key ordering verified.
-- [ ] Service empty/unknown/invalid cases and cancellation history verified.
-- [ ] Every console command and invalid-input recovery demonstrated.
-- [ ] Query and workflow tests plus all previous tests pass; actual evidence linked.
-- [ ] Human design, Copilot critique, review and integration recorded honestly.
-- [ ] Reflections and ten formative responses completed.
-- [ ] README updated; earlier code/tests/records preserved.
-- [ ] Common SHA protected for UG Stage 12; PG Stage 10/11 work deferred until approved.
+- [1] Query contracts, purity, new lists and named-key ordering verified.
+- [1] Service empty/unknown/invalid cases and cancellation history verified.
+- [1] Every console command and invalid-input recovery demonstrated.
+- [1] Query and workflow tests plus all previous tests pass; actual evidence linked.
+- [1] Human design, Copilot critique, review and integration recorded honestly.
+- [1] Reflections and ten formative responses completed.
+- [1] README updated; earlier code/tests/records preserved.
+- [1] Common SHA protected for UG Stage 12; PG Stage 10/11 work deferred until approved.
 
 No persistence, rescheduling or assurance implementation is part of Stage 9. UG: 6→7→8→9→12. PG: 6→7→8→9→10→11→12. Mixed groups keep one repository and protect the common candidate.
