@@ -302,7 +302,7 @@ The stage 6 engineering rule is to make sure that your commits are meaningful an
 ## M Completion and handover
 
 - Starting SHA: a4933c1e1f7a40ec38a22d9c9b48fe7493e41ef5
-- Final Stage 6 code SHA: [response]
+- Final Stage 6 code SHA: 1071174b0296aff1fcb8fecf58b8c1fe7a3b557a
 - Test command: N/A
 - Working directory: Main
 - Observed result: No tests, Everything working, Documentation filled
