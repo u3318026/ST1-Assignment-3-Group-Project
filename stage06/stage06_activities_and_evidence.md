@@ -242,13 +242,13 @@ Repeat per member. Include only categories that describe actual work; write not 
 
 
 - Member: Md Tahmid Ul Islam Tonmoy
-- Implementation: [work and evidence]
-- Testing: [work and evidence]
-- Review: [work and evidence]
-- Issue refinement: [work and evidence]
-- Design and responsibility discussion: [work and evidence]
-- Debugging or integration: [work and evidence]
-- Documentation or team support: [work and evidence]
+- Implementation: Led the Stage 10 PG rescheduling change in project/smartcare/domain.py and project/smartcare/services.py. A successful move changes the appointment time while preserving its ID, patient, practitioner and status. Rescheduling stays in the service layer and does not add a console option. Evidence: PR #4 and the Stage 10 evidence record.
+- Testing: Added and reviewed focused rescheduling and assurance tests in test_rescheduling.py and test_assurance.py. The assurance cases cover same-time rescheduling attempts for cancelled or completed appointments and whitespace-only patient IDs. For Stage 12, the protected common suite passed 81 tests, and the post-merge PG suite passed 100 tests in 0.09s at 4c5925677be2f9f2fe274f7c1e96eda5dfeb5224. Evidence: PR #6 and Stage 12, Sections C and D.
+- Review: Reviewed the Copilot plan and inspected the application and test diffs separately. I asked for the rescheduling test to move an appointment past another booking so it could detect incorrect list ordering. Evidence: Stage 10 evidence record and Stage 12, Section E.
+- Issue refinement: Turned the rescheduling requirements into concrete acceptance checks: preserve appointment identity, allow a valid same-time request, reject practitioner conflicts without changing state, free the old slot and show the updated time in lookup and listings. Evidence: Issue #3 and the Stage 10 evidence record.
+- Design and responsibility discussion: Kept appointment state rules in the domain and used the service to coordinate lookup and conflict checking through the existing store. Preserved the common workflows and kept persistence outside the release scope. Evidence: project/README.md and Stage 12, Sections E and N.
+- Debugging or integration: Diagnosed a fresh setup that picked up Python 3.9.6 instead of Python 3.12.10. I updated the README to call .venv/bin/python directly, then verified dependency installation, both launch modes and the full PG suite in a fresh post-merge worktree. Evidence: Stage 12, Sections F, H and I.
+- Documentation or team support: - Updated the root and project READMEs and prepared the Stage 12 release evidence, including setup instructions, tested SHAs, known limitations and viva handover notes. Evidence: PR #7 and stage12/stage12_activities_and_evidence.md.
 
 
 ## K Exit question
