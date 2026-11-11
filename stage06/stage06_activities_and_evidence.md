@@ -94,7 +94,7 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Meaningful commits: Fix F8-01 and update Stage 8 record, commit for f8-01, required commit for f8-02, all test passed sha for D F8-02 diagnosis and repair, refactor sha, Ready for integration (probably)
 - Test command, directory and observed result: All passing
 - Another-member reviewer: Tamas Szucs
-- Human observations recorded before Copilot: 7/11/2026 12:27pm 
+- Human observations recorded before Copilot: Evertything passing, nothing unsatisfactory
 - Requirement, responsibilities, test assertions and unrelated-scope checks: Reversed practitioner comparison in has_practitioner_conflict, Practitioner identity mismatch elsewhere in the model (Possible but less likely), find_appointment() intentionally excludes CANCELLED appointments (Most likely), Service-layer lookup logic incorrectly treats "not found" and "cancelled" as the same thing (Possible but secondary), 
 - Key feedback: Make sure to meet each of those requirements in testing
 - Author response/change and verification: Completed
@@ -141,6 +141,60 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Each member updated main: Md Tahmid Ul Islam Tonmoy
 - Integrated verification after merge: sha = fbad1d2e848ad8ba2b6c457a5c0a0929cf699fbc
 
+- PR link and title: Stage 10: Document review and verification
+- Linked issue and requirement: Stage 10 completion
+- Feature branch: Stage 10: Document review and verification
+- Changed behaviour: Completed work for stage 10
+- Meaningful commits: Revise stage10_activities_and_evidence.md for clarity, Document Stage 10 review and verification
+- Test command, directory and observed result: All passing
+- Another-member reviewer: Tamas Szucs
+- Human observations recorded before Copilot: Evertything passing, nothing unsatisfactory
+- Requirement, responsibilities, test assertions and unrelated-scope checks: Documentation all filled.
+- Key feedback: N/A
+- Author response/change and verification: Completed
+- Reviewer recheck and approval: Completed
+- Merge outcome and SHA: Completed with no issues, sha = 92c4524d06c5db79c21912f97657496b6e622d83
+- Significant Copilot assistance: None
+- Linked issue closure: Stage 8 Completion
+- Each member updated main: Md Tahmid Ul Islam Tonmoy
+- Integrated verification after merge: sha = 92c4524d06c5db79c21912f97657496b6e622d83
+
+- PR link and title: Stage 11: SmartCare assurance tests and evidence
+- Linked issue and requirement: Completion of stage 11
+- Feature branch: Stage 11: SmartCare assurance tests and evidence
+- Changed behaviour: Completing stage 11 work
+- Meaningful commits: Document Stage 11 assurance evidence, Add Stage 11 SmartCare assurance tests
+- Test command, directory and observed result: All tests passing
+- Another-member reviewer: Tamas Szucs
+- Human observations recorded before Copilot: All passing 
+- Requirement, responsibilities, test assertions and unrelated-scope checks: test_non_scheduled_appointment_cannot_be_rescheduled_to_original_time, test_find_patient_rejects_whitespace_only_id
+- Key feedback: Make sure all tests are passing, code comments
+- Author response/change and verification: Completed
+- Reviewer recheck and approval: Completed
+- Merge outcome and SHA: Completed with no issues, sha = 94c7f244cf3dd1e995287966516bbb5bc2e7b792
+- Significant Copilot assistance: None
+- Linked issue closure: Stage 11 completed
+- Each member updated main: Md Tahmid Ul Islam Tonmoy
+- Integrated verification after merge: sha = 94c7f244cf3dd1e995287966516bbb5bc2e7b792
+
+- PR link and title: Prepare SmartCare Stage 12 release
+- Linked issue and requirement: Completion of Stage 12 documentation
+- Feature branch: Prepare SmartCare Stage 12 release
+- Changed behaviour: Stage 12 completion
+- Meaningful commits: Clarify Python setup and record Stage 12 candidate verification, Prepare SmartCare Stage 12 release candidate
+- Test command, directory and observed result: All documentaion filled
+- Another-member reviewer: Tamas Szucs
+- Human observations recorded before Copilot: N/A
+- Requirement, responsibilities, test assertions and unrelated-scope checks: All documentation complete
+- Key feedback: N/A
+- Author response/change and verification: Completed
+- Reviewer recheck and approval: Completed
+- Merge outcome and SHA: Completed with no issues, sha = 1521b84e4df30e1cc9ea181c8d3087393e4281c2
+- Significant Copilot assistance: None
+- Linked issue closure: Stage 12 complete
+- Each member updated main: Md Tahmid Ul Islam Tonmoy
+- Integrated verification after merge: sha = 1521b84e4df30e1cc9ea181c8d3087393e4281c2
+
 ## H Copilot collaboration record
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
@@ -171,11 +225,11 @@ Repeat per member. Include only categories that describe actual work; write not 
 - Member: Tamas Szucs
 - Implementation: Stage 6-7
 - Testing: All tests passed.png
-- Review: [work and evidence]
-- Issue refinement: [work and evidence]
-- Design and responsibility discussion: Was lead design for implementing parts 6-7
+- Review: Working on Main, no review for any PR required. Reviewed by members when working on seperate sections
+- Issue refinement: Tests for all working features included for services and domain
+- Design and responsibility discussion: Was lead design for implementing parts 6-7, Reveiewed all PR
 - Debugging or integration: Was leading part 6-7, had many debuggings during the process of testing, fixed all of those to make sure that its working.
-- Documentation or team support: [work and evidence]
+- Documentation or team support: Github reviews and commits.
 
 - Member: Ryan Greives
 - Implementation: [work and evidence]
@@ -247,15 +301,15 @@ The stage 6 engineering rule is to make sure that your commits are meaningful an
 
 ## M Completion and handover
 
-- Starting SHA: [response]
+- Starting SHA: a4933c1e1f7a40ec38a22d9c9b48fe7493e41ef5
 - Final Stage 6 code SHA: [response]
-- Test command: [response]
-- Working directory: [response]
-- Observed result: [response]
-- PR and another-member reviewer: [links]
-- Unresolved issue or none: [response]
-- Stage 7 handover status: [ready for tutor checkpoint / unresolved work]
-- Final submitted SHA if later than tested SHA: [response and evidence-only difference]
+- Test command: N/A
+- Working directory: Main
+- Observed result: No tests, Everything working, Documentation filled
+- PR and another-member reviewer: PR-01, PR-2, PR-03, PR-04, PR-05, PR-06, Reviewers = Tamas Szucs
+- Unresolved issue or none: None
+- Stage 7 handover status: ready
+- Final submitted SHA if later than tested SHA: 9f666f55549448ef184b1218b513dadee2d97198
 
 - [ ] Three Stage 6 service targets completed and checked.
 - [ ] Original supplied tests retained and passing.
